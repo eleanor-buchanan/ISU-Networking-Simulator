@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ISU Networking Simulator Because We Could All Use The Practice</title>
+  <style>
+     :root { 
+        --isu-blue: #001f3f; 
+        --isu-gold: #FFCC00; 
+        --isu-white: #ffffff; 
+        --isu-navy: #001226;
+        --wine-red: #8a0303;
+        --text: #f0f0f0; 
+     } /* Fixed missing bracket here */
+
+     body { 
+        background: var(--isu-navy); 
+        color: var(--text); 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        margin: 0; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        height: 100vh; 
+        overflow: hidden; 
+    }
+
+    #app { 
+        width: 1150px; 
+        height: 850px; 
+        background: var(--isu-blue); 
+        border: 3px solid var(--isu-gold); 
+        box-shadow: 0 0 40px rgba(255, 204, 0, 0.2); 
+        display: flex; 
+        flex-direction: column; 
+        position: relative; 
+    }
+
+    .screen { display: none; padding: 30px; flex-direction: column; height: 100%; box-sizing: border-box; }
+    .active { display: flex; }
+    
+    h1, h2 { color: var(--isu-gold); text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--isu-gold); padding-bottom: 10px; margin-top: 0; }
+
+    .hud { display: flex; justify-content: space-between; padding: 12px; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--isu-gold); font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--isu-gold); }
+    .stat { color: var(--isu-white); font-weight: bold; }
+
+    .cv-card { border: 2px solid var(--isu-gold); padding: 25px; background: rgba(255,255,255,0.05); text-align: center; max-width: 500px; margin: 20px auto; }
+    
+    .npc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
+    .npc-card { border: 1px solid rgba(255,204,0,0.3); padding: 15px; text-align: center; cursor: pointer; background: var(--isu-navy); height: 180px; transition: 0.2s; border-style: dotted; display: flex; flex-direction: column; justify-content: center; }
+    .npc-card:hover { border-color: var(--isu-gold); background: rgba(255,204,0,0.1); border-style: solid; }
+    .npc-card.finished { opacity: 0.4; filter: grayscale(1); cursor: default; }
+    .npc-card.visited { border-color: #00ff00; border-style: solid; box-shadow: inset 0 0 10px rgba(0,255,0,0.1); }
+
+    #chat-box { flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,204,0,0.2); padding: 20px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { max-width: 85%; line-height: 1.5; padding: 12px 18px; border-radius: 4px; font-size: 0.95rem; }
+    .npc-msg { background: var(--isu-navy); border-left: 4px solid var(--isu-gold); align-self: flex-start; color: #fff; }
+    .player-msg { background: #003d7a; border-right: 4px solid var(--isu-white); align-self: flex-end; text-align: right; color: #fff; }
+
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    button { background: var(--isu-navy); border: 1px solid var(--isu-gold); color: var(--isu-gold); padding: 14px; cursor: pointer; font-family: inherit; transition: 0.15s; text-align: left; font-size: 0.85rem; font-weight: bold; }
+    button:hover { background: var(--isu-gold); color: var(--isu-navy); }
+    button:disabled { opacity: 0.3; cursor: default; }
+
+    /* Small/Off-side Wine Button */
+    #wine-container { position: absolute; top: 75px; right: 30px; z-index: 10; }
+    #wine-btn { background: var(--wine-red); border: 1px solid #ff9999; color: white; font-size: 0.55rem; padding: 5px 10px; width: 140px; text-align: center; cursor: pointer; }
+    #wine-btn:hover { background: #ff0000; }
+
+    .progress-bar { width: 100%; height: 4px; background: #222; margin-bottom: 10px; }
+    #npc-patience { height: 100%; background: var(--isu-gold); width: 0%; transition: 0.3s; }
+
+    #anwar-box { display: none; margin-top: 20px; padding: 20px; border: 2px solid var(--isu-gold); background: var(--isu-navy); color: var(--isu-white); }
+    .anwar-img { color: var(--isu-gold); font-weight: bold; margin-bottom: 10px; display: block; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="screen-char" class="screen active">
+    <h1 style="text-align: center">International Space University</h1>
+    <h2 style="text-align: center; border: none">Professional Networking Simulator</h2>
+    <div class="cv-card">
+      <h3 style="color: var(--isu-gold)">Aerospace Engineer</h3>
+      <p>Pioneer Hall Social Simulation</p>
+      <p style="font-size: 0.8rem; color: #aaa; margin-top: 15px;">Targeting: Dr. Osei, Webb, Hartley, and the GSA Delegation.</p>
+      <button onclick="selectChar()" style="width: 100%; text-align: center; margin-top: 10px;">BEGIN SESSION</button>
+    </div>
+  </div>
+
+  <div id="screen-lobby" class="screen">
+    <div class="hud">
+      <span>GALA PROGRESS: <span id="progress-count" class="stat">0/10</span></span>
+      <div style="display:flex; gap: 20px;">
+        <span>CONVERSATION SCORE: <span id="total-score" class="stat">0</span></span>
+        <span>CONTACTS: <span id="contact-count" class="stat">0</span></span>
+      </div>
+    </div>
+    <h2>Pioneer Hall</h2>
+    <div class="npc-grid" id="npc-grid"></div>
+  </div>
+
+  <div id="screen-chat" class="screen">
+    <div id="wine-container">
+        <button id="wine-btn" onclick="sipWine()">SIP ALSATIAN WINE</button>
+    </div>
+    <div class="hud">
+      <span id="chat-target">TARGET: ---</span>
+      <div style="display:flex; gap: 20px;">
+        <span>THINKING TIME: <span id="timer-val" style="color: var(--isu-white)">0.0s</span></span>
+        <span>SIPS: <span id="sip-val" style="color: var(--isu-white)">0</span></span>
+        <span>EXCHANGE: <span id="exchange-stage" class="stat">1/10</span></span>
+      </div>
+    </div>
+    <div class="progress-bar"><div id="npc-patience"></div></div>
+    <div id="chat-box"></div>
+    <div class="choices" id="choice-area"></div>
+  </div>
+
+  <div id="screen-result" class="screen">
+    <h1>Simulation Complete</h1>
+    <div id="summary-content" style="white-space: pre-wrap; line-height: 1.5; font-size: 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--isu-gold); padding: 20px; flex-grow: 1; overflow-y: auto;"></div>
+    
+    <div id="anwar-box">
+        <span class="anwar-img">[ PROFESSOR ANWAR SOUNNY-SLITINE ]</span>
+        <p id="anwar-text"></p>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <button id="anwar-trigger" onclick="speakToAnwar()" style="margin-top:20px; flex: 1; text-align: center">REQUEST FEEDBACK FROM PROFESSOR ANWAR</button>
+        <button onclick="location.reload()" style="margin-top:20px; width: 220px; text-align: center;">RE-START</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/** 
+ * DIALOGUE DATA 
+ * Mapped directly from your documents
+ */
+const npcData = [
+  {
+    name: "Dr. Amara Osei", role: "ESA Mission Ops", hint: "Standing near the bar, glancing at the programme.",
+    opening: "Dr. Osei looks up as you approach.",
+    stages: [
+      { t: "...", c: [
+        { text: "Dr. Osei — I recognized you from the Hera mission briefings. I work in systems engineering and I've been hoping to meet someone from ESA ops.", pts: 10, r: "She smiles warmly. 'Please do. It's always nice to meet someone who actually reads the briefings.'" },
+        { text: "Hi there — I'm an aerospace engineer. Great event, isn't it?", pts: 4, r: "Polite but generic. 'It is. What brings you to ISU?' — she's waiting to be interested." },
+        { text: "Excuse me — are you Dr. Osei? I follow ESA's work quite closely.", pts: 7, r: "Pleased but guarded. 'That's kind. Yes, I am.'" },
+        { text: "Hi, I noticed you're alone — kind of embarrassing for you. I'm a systems engineer.", pts: 0, r: "Gracious but framing is weak. 'Um. That's great.'" }
+      ]},
+      { t: "Systems engineering is a broad church. What end of it are you in?", c: [
+        { text: "I focus on propulsion system integration — stage separation reliability for a small launch vehicle.", pts: 10, r: "'That's meaty work. Stage separation is where ambition meets physics.' She's engaged." },
+        { text: "I'm at a startup — we're building a launch vehicle. Early stage but moving fast.", pts: 5, r: "'Everyone is moving fast right now. What specifically do you own technically?'" },
+        { text: "Mostly avionics and software systems. Bit of everything. Small team.", pts: 6, r: "'Small teams teach you quickly. What's the hardest problem you've hit?'" },
+        { text: "I'm between roles — was at a defence prime and now exploring NewSpace.", pts: 4, r: "'That's a common trajectory. What prompted the switch?' Mild concern." }
+      ]},
+      { t: "ESA's missions live or die on systems engineering. What's the most underestimated failure mode in launch vehicle integration?", c: [
+        { text: "Interface creep — where subsystems assume the other owns a requirement. Documentation/culture problem as much as engineering.", pts: 10, r: "'Exactly right. We lost six months on Vega-C to something adjacent to that.'" },
+        { text: "Thermal management tends to get underspecced early on.", pts: 8, r: "'True. Thermal is where optimism goes to die.' She nods." },
+        { text: "Honestly, schedule pressure. It drives most technical failures.", pts: 6, r: "'Fair, but schedule pressure is a symptom. What is the underlying failure?'" },
+        { text: "Software validation. Tooling hasn't caught up with complexity.", pts: 7, r: "'A real problem. Are you seeing that in your work?'" }
+      ]},
+      { t: "We're thinking about how ESA partners with commercial launch. Do you have a view on how that relationship should work?", c: [
+        { text: "The risk model needs renegotiation. Commercial providers accept high risk, but ESA payload requirements implicitly demand heritage. Gap causes friction.", pts: 10, r: "'You've put your finger on something we debate constantly. Heritage vs Innovation.'" },
+        { text: "ESA needs internal capacity to evaluate commercial vehicles on their own terms, rather than Ariane standards.", pts: 9, r: "'Politically sensitive, but technically correct. Not many say it that directly.'" },
+        { text: "Commercial providers need to step up documentation to meet agency standards.", pts: 5, r: "'One view. Though I'd argue the standards themselves need revisiting.' She pushes." },
+        { text: "It depends on the mission class — science is different from Earth observation.", pts: 6, r: "'True — but I'm curious if you have a view beyond 'it depends'.'" }
+      ]},
+      { t: "I've seen engineers who couldn't navigate the institutional layer — brilliant technically, but ineffective. Have you run into that?", c: [
+        { text: "Constantly. A senior engineer couldn't translate fault-tree findings into language managers could act on. Answer existed; never got implemented.", pts: 10, r: "'That's the tragedy. The knowledge is there, the channel isn't.' She looks thoughtful." },
+        { text: "I've felt it personally. I have to learn to frame technical risks as business risks.", pts: 9, r: "'That's a mature realisation. Most engineers resist it.'" },
+        { text: "I think it's on institutions to build better processes for technical escalation.", pts: 6, r: "'Perhaps. Though waiting for institutions to fix themselves is a long game.'" },
+        { text: "I've been lucky — my current team is pretty flat and technical voices carry weight.", pts: 5, r: "'Enjoy it while it lasts.' She moves on." }
+      ]},
+      { t: "Do you think Europe is losing ground in space, or is that overblown?", c: [
+        { text: "Ariane 6 delays were pretty damaging. I think they're getting ahead, though. The engineering capability hasn't, like, gone away.", pts: 10, r: "'Precisely the crux. Extraordinary talent, structural problem.' She looks at you." },
+        { text: "Narrative is overblown, but the launch gap is real. Depending on SpaceX is not a strategy.", pts: 9, r: "'No, it isn't.' She says firmly." },
+        { text: "Europe punches above its weight on science — Gaia, JUICE. Launch is a different story.", pts: 7, r: "'A fair distinction. Science vs Access are different problems.'" },
+        { text: "I try not to get into geopolitics — it scares me.", pts: 0, r: "She pauses and raises an eyebrow. 'Well, engineers who ignore geopolitics often discover that it finds them anyway.'" }
+      ]},
+      { t: "Where do you want to be in ten years? And I mean genuinely.", c: [
+        { text: "I want to have shipped something that flies. Owned a system end-to-end. Not just be a person who reviews someone else's work.", pts: 10, r: "'Good. The sector needs people who want to own things.' She smiles." },
+        { text: "I want to work at the intersection of commercial and institutional space.", pts: 9, r: "'Sensible ambition. There aren't many who can hold both worlds.'" },
+        { text: "I'd like a leadership role — technical director or chief engineer level.", pts: 6, r: "'Reasonable. I'd encourage you to be specific about what you'd be directing.'" },
+        { text: "I'm not sure yet. Need more experience before I narrow down.", pts: 4, r: "'That's honest. But the sector will make choices for you if you don't. It's a good idea to have something to shoot for, even if you're not sure that's what you'll stick with.'" }
+      ]},
+      { t: "What's the biggest mistake you've made professionally?", c: [
+        { text: "I signed off on a test review with an unresolved torque concern. It passed, but I learned 'probably fine' isn't an engineering standard.", pts: 10, r: "'Serious answer. The fact that nothing failed almost makes it worse.' She nods." },
+        { text: "I underestimated a supplier's capability and spent six months paying for it.", pts: 9, r: "'The industry is littered with programmes that trusted reputation over evidence.'" },
+        { text: "I've been too cautious — not pushing back hard enough because I was worried about politics.", pts: 7, r: "'A real failure mode, and harder to correct than technical errors.'" },
+        { text: "I never make mistakes. I am always good at what I do.", pts: 0, r: "A long pause. 'That's... well. You must be very proud of yourself.' She rolls her eyes." }
+      ]},
+      { t: "Is... there something specific you were hoping to take away from meeting someone like me?", c: [
+        { text: "The perspective of people who navigated the institutional side of large programs. You've given me a lot to think about.", pts: 10, r: "'That's a graceful thing to say. I appreciate it.'" },
+        { text: "I wanted to understand what serious mission-level engineering looks like from inside an agency.", pts: 9, r: "'Candour is more useful than polish at these events.'" },
+        { text: "I'd love to explore collaboration pathways between my company and ESA.", pts: 6, r: "'It is a long road. But not an impossible one.' (She's guarded, and probably just being polite.)" },
+        { text: "I just wanted to make good use of the evening.", pts: 5, r: "'Good. So have I.' " }
+      ]},
+      { t: "Well, I should find Dr. Wotring. Is there anything else I should know?", c: [
+        { text: "Just that I take this as a craft. I work with people who care about getting it right. Yours clearly is.", pts: 10, r: "'I expect we'll cross paths again.' ❌"},
+        { text: "I'm working on stage separation validation under thermal cycling. If you have a contact in that team, I'd be grateful.", pts: 9, r: "'That I can do. Let me give you a name.' ✅ CONTACT + REFERRAL" },
+        { text: "Not really — I think you have a good picture of me. Thanks for your time.", pts: 5, r: "'My pleasure.' She walks away. ❌" },
+        { text: "I'd love to send you a deck on what we're building.", pts: 3, r: "'Perhaps not tonight.' ❌" }
+      ]}
+    ]
+  },
+  {
+    name: "Marcus Webb", role: "Venture Capitalist", hint: "Sort of an impatient vibe. Checks his watch frequently, looking for high-impact founders.",
+    opening: "Hi. Can I help you?",
+    stages: [
+      { t: "...", c: [
+        { text: "Systems engineer working on stage separation reliability. We've cut failures by 30% via a novel fault isolation architecture.", pts: 9, r: "He tilts his head. 'Stage sep. Specific. Keep going.' He puts his phone away." },
+        { text: "Aerospace engineer at a launch startup. Pre-Series A, propulsion focused. Mapping the investor landscape.", pts: 7, r: "'Pre-A in launch. Expensive sandbox. Who's on your cap table?'" },
+        { text: "I work in engineering and I'm really passionate about making space accessible.", pts: 3, r: "He glances at his watch. 'Ok, but what do you actually build?'" },
+        { text: "Before I pitch — what does your fund care about right now? Infrastructure, services, or data?", pts: 8, r: "A half-smile. 'Smart. We're heavy on infrastructure. Now you go.'" }
+      ]},
+      { t: "Launch hardware. Talk to me about rockets. Why does yours survive?", c: [
+        { text: "We're not competing on thrust-to-weight. We're competing on cadence reliability. Target is 95th-percentile on-time delivery.", pts: 10, r: "'That's a positioning answer, not an engineering answer. I like it. Go on.'" },
+        { text: "Our cost-per-kg to LEO is competitive and we have a lighter regulatory footprint than primes.", pts: 7, r: "'Everyone says cost-per-kg. What's your number?' He pushes." },
+        { text: "We have a strong team — ex-SpaceX, ex-Rocket Lab. Really high-grade people.", pts: 5, r: "'Pedigree is cool, but I think most people in my area like proof of concept better.' He's impatient." },
+        { text: "Reusability on a vehicle class where nobody's cracked it yet. Sub-500kg payload.", pts: 8, r: "'Sub-500kg reusable is a hard problem. Who else is in that race?'" }
+      ]},
+      { t: "What keeps you up at night technically? Give me one specific.", c: [
+        { text: "Turbopump cavitation under off-nominal inlet conditions. Test data is limited in edge cases.", pts: 10, r: "'Real answer. Most give me business risk dressed as technical risk. You gave me physics.'" },
+        { text: "Stage separation sequencing under partial ignition. Intersection of three subsystems.", pts: 8, r: "'Honest. How far along is your mitigation?' He's taking a mental note." },
+        { text: "Talent retention. Finding engineers who will accept startup risk is getting harder.", pts: 5, r: "'HR risk, not technical. I asked about engineering.' He corrects you." },
+        { text: "Supply chain for avionics. Single-source dependencies we haven't resolved yet.", pts: 6, r: "'Supply chain is solvable with money. I want to know what money can't solve.'" }
+      ]},
+      { t: "Give me your market. Actual addressable market in next 5 years.", c: [
+        { text: "18-20 constellation operators need sub-500kg rideshare. Capture 10% = 40 missions. $200M revenue potential.", pts: 10, r: "He nods. 'A real number built from real customers. Talked to them?'" },
+        { text: "Small satellite market growing at 15% CAGR. We're targeting the dedicated slot window.", pts: 7, r: "'CAGR numbers are too aggregate. Who writes you a check in year one?'" },
+        { text: "Small sat launch is a multi-billion dollar market. We want a slice.", pts: 4, r: "'Meaningful slice' is not a number. I need a conversion hypothesis." },
+        { text: "Three anchor customers in preliminary talks. Potential volume of 8-12 missions.", pts: 8, r: "'Preliminary talks aren't LOIs. What's the blocker to commitment?'" }
+      ]},
+      { t: "I've funded three launch companies. One's alive. One's dead. What's the difference maker?", c: [
+        { text: "The survivors know when to stop optimising and start delivering. Perfect is the enemy of the flying.", pts: 9, r: "'Correct. The dead one had a perfect vehicle that never flew. Live one had an ugly first launch.'" },
+        { text: "Technical credibility plus commercial discipline. Rare teams do both.", pts: 8, r: "'Rare is right. Which one are you and where's the gap?'" },
+        { text: "Funding. Companies that survive have the capital runway for hard technical phases.", pts: 5, r: "'Necessary but not sufficient. I've killed well-funded companies.'" },
+        { text: "Founder resilience. Launch is a decade-long endeavour. Teams that survive don't quit.", pts: 7, r: "'Vague. Resilience in what specific form?'" }
+      ]},
+      { t: "What's the weakest part of your team right now — honestly?", c: [
+        { text: "Commercial. My co-founder and I are engineers. We're actively looking for a commercial lead with customer experience.", pts: 10, r: "'Honest. And you have a plan. Good.'" },
+        { text: "Programme management discipline. Rigorous documentation doesn't scale from our small team mode.", pts: 7, r: "'Self-aware. It'll bite you at Series B if you don't fix it.'" },
+        { text: "I think we're pretty well-rounded. Deliberate composition.", pts: 3, r: "Long pause. 'Founders who say they're well-rounded are the most expensive to back.'" },
+        { text: "Legal and compliance. Space regulation is getting complex and we're without in-house counsel.", pts: 6, r: "'Fixable with fractional counsel. Thought you'd say sales.'" }
+      ]},
+      { t: "Why fund you? I can find ten teams with your technical profile.", c: [
+        { text: "Because I've failed a separation system once. Traced it to a 0.3s edge case others missed. I have the scar tissue.", pts: 10, r: "He's quiet. 'Founder answer. Okay. I'm listening differently now.'" },
+        { text: "Spent 5 years inside a prime watching bureaucracy kill good decisions. I know what to remove.", pts: 8, r: "'Iconoclast narrative. Works if you execute. What have you shipped?'" },
+        { text: "I've been in aerospace my whole career. It's all I know.", pts: 5, r: "'Dedication, not differentiation. Try again.'" },
+        { text: "Insight came from a specific problem I couldn't solve at my last job. The company is the solution.", pts: 7, r: "'What was the problem?' He's leaning forward." }
+      ]},
+      { t: "Assume I'm interested. What are you looking for beyond capital?", c: [
+        { text: "Portfolio introductions to constellation operators. Procurement decision-makers you know.", pts: 10, r: "'Homework done. Most just want the cash. That's worth a follow-up.'" },
+        { text: "Customer network and co-investor credibility. Lead cheque changes how operators respond.", pts: 8, r: "'Signal value. Yes. What's your timeline to close?'" },
+        { text: "Capital is the primary need. We have a funding gap for the next test campaign.", pts: 5, r: "'If capital is your only ask, you're not thinking about what I bring.'" },
+        { text: "Regulatory navigation, specifically FAA launch licensing.", pts: 7, r: "'We can help there. I can make two introductions tonight.' He means it." }
+      ]},
+      { t: "You've got thirty seconds left in my three minutes — use them.", c: [
+        { text: "Raising $12M seed extension. LOI from anchor customer. I'd like 15 mins next week to show the test data.", pts: 10, r: "Hands you his card. 'Tuesday, 2pm. Don't be late.' ✅" },
+        { text: "I'll send our one-pager tonight. If it passes your filter, I'd welcome thirty minutes.", pts: 8, r: "'Respect the framing. Send it. Subject line: Stage Separation.' ✅" },
+        { text: "Just want to say this was a great conversation. Appreciate your time.", pts: 4, r: "'Thank you. I'll forget this by morning without something concrete.' ❌" },
+        { text: "One question: what makes you pass on a launch company regardless of team?", pts: 7, r: "'Market timing.' He walks away but looks back." }
+      ]},
+      { t: "Last thing — what's your name and company for my notes?", c: [
+        { text: "[Name], [Company]. Stage sep reliability.", pts: 10, r: "Types it verbatim. 'You've been worth the three minutes.' ✅" },
+        { text: "[Name], [Company]. Sub-500kg reusable launch.", pts: 8, r: "'Great, thanks.' Types it. 'Hear from my EA.' ✅" },
+        { text: "[Name] — aerospace engineer, interesting person, worth a coffee, super cool guy.", pts: 4, r: "'Worth a coffee'... okay... maybe... ❌" },
+        { text: "[Name], [Company].", pts: 7, r: "'Cool. Thanks.' ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Dr. Priya Nair", role: "JWST Researcher", hint: "Standing alone, looking slightly nervous.",
+    opening: "I've been standing here trying to look like I belong. Is it working?",
+    stages: [
+      { t: "...", c: [
+        { text: "Honestly, better than most. I'm [Name], systems engineer. What brings you to ISU?", pts: 9, r: "She laughs. 'That's a kind lie. I'm presenting a poster tomorrow.'" },
+        { text: "You're presenting tomorrow? I saw your name. Exoplanet atmospheres?", pts: 7, r: "'You actually read the programme. Yes — JWST spectra.'" },
+        { text: "Everybody feels that way. You just have to power through.", pts: 4, r: "A slightly deflated smile. She expected more than a pep talk." },
+        { text: "You look more at ease than the people networking over the canapés.", pts: 8, r: "She smirks. 'Those people terrify me.'" }
+      ]},
+      { t: "The poster is on CO2 co-detection in rocky atmospheres. You probably don't spend much time in that territory.", c: [
+        { text: "Instrumentation side is fascinating. JWST NIRSpec is incredible. Transit spectra or eclipse?", pts: 9, r: "Eyes widen. 'Primary transit. You know the instrument well.'" },
+        { text: "Mainly in launch hardware, but payload biosignatures interest me.", pts: 7, r: "'Biosignature is a charged word. First step is proving the detection is reliable.'" },
+        { text: "Sounds specialised. How do you find funding for something that niche?", pts: 3, r: "A small wince. 'It's difficult, yes.' Wrong first move." },
+        { text: "Don't work in that space, but I'd like to understand the core technical challenge.", pts: 6, r: "'Atmospheric signal-to-noise. The planet is a million times fainter than the star.'" }
+      ]},
+      { t: "What you do is so different. Is there any overlap between engineering and science?", c: [
+        { text: "The interface matters. If I don't understand your instrument needs, I'll design a spacecraft that underperforms.", pts: 10, r: "'Exactly the problem I had. They gave us a spacecraft then asked what science we wanted.'" },
+        { text: "Best missions — JWST, Gaia — had scientists and engineers in the same room from day one.", pts: 8, r: "'JWST is a good example of it working. After significant pain.'" },
+        { text: "I think the overlap is mostly at mission design level; worlds diverge quickly below that.", pts: 5, r: "'Maybe. Though engineering constraints shape what science is possible.'" },
+        { text: "Sectors are too siloed. Events like this help.", pts: 6, r: "'Agreed. Three engineers tonight and none asked what I was working on.'" }
+      ]},
+      { t: "We can distinguish abiotic combinations from biotic ones — under certain conditions. Narrow claim but real.", c: [
+        { text: "Narrow claims with evidence are worth more than broad claims with noise. What are the boundary conditions?", pts: 10, r: "'Stellar type and pressure. She's been waiting for someone to ask this properly.'" },
+        { text: "Rigorous incremental result that builds the field. How does it hold up against false positives?", pts: 8, r: "'We ran 2,000 synthetic spectra. Rate is below 4%.'" },
+        { text: "Is this pointing toward identifying life, eventually?", pts: 5, r: "'Careful. field has been burned by premature claims. Interpretation is a long way off.'" },
+        { text: "Wow — does that mean we're close to confirming life?", pts: 4, r: "'No. One piece of detection methodology. Building the instrument, not reading it yet.'" }
+      ]},
+      { t: "I'm not sure what I do with a result like this in a career. Is my work relevant outside academia?", c: [
+        { text: "More than you'd expect. Signal discrimination methodology is transferable to Earth observation.", pts: 10, r: "'I assumed the jump to industry meant abandoning science entirely.'" },
+        { text: "Agencies look for people who bridge science and mission design. Your specs are rare.", pts: 8, r: "'Interesting. I applied for a fellowship last year and didn't make the cut.'" },
+        { text: "Fundamental science is hard to monetise. But academia isn't a bad path.", pts: 4, r: "'I know, it's just... funding cycles are brutal.' She looks deflated." },
+        { text: "JWST data pipeline expertise is a differentiator. Companies need people who lived inside that model.", pts: 7, r: "'Really? I assumed everyone had that. Maybe I've been too close to it.'" }
+      ]},
+      { t: "What does a typical workday look like for you? I have no idea what systems engineering involves.", c: [
+        { text: "I sit at the intersection of subsystems. When teams have conflicting requirements, I find the compromise.", pts: 9, r: "'Translating between languages that don't naturally communicate. Sounds like what I do.'" },
+        { text: "Fault tree analysis, ICDs, design reviews. Documentation nobody reads until something breaks.", pts: 7, r: "She laughs. 'Data reduction pipelines and peer review that takes 8 months. I feel that.'" },
+        { text: "It varies. Some days technical, some days meetings.", pts: 5, r: "'Oh.' She waits for more. Silence." },
+        { text: "Validating fault isolation with limited test opportunities. Proving it won't fail with only 3 tests.", pts: 8, r: "'Statistical validation under constraint. Problem I face in calibration too.'" }
+      ]},
+      { t: "Timeline for results in my field is so long. Sometimes I wonder if I'll still care by then.", c: [
+        { text: "Is it about the answer or the journey? Survivors find meaning in making the next decision better.", pts: 9, r: "'Useful way to frame it. Better than 'just be patient' which everyone says.'" },
+        { text: "Commercial sector is compressing timelines. Thought about bridging academic and commercial?", pts: 7, r: "'A little. I worry about scientific rigour trade-off. Defensive, I know.'" },
+        { text: "That's academia for you. It's a marathon. Funding cycles are part of it.", pts: 5, r: "'I know. Doesn't make it easier to sit with.'" },
+        { text: "What would you work on if timeline weren't a constraint at all?", pts: 8, r: "Her face changes. 'Atmospheric disequilibrium. 20 year project. She's electric.'" }
+      ]},
+      { t: "I feel like you're the first engineer here who actually wanted to understand what I do.", c: [
+        { text: "Engineers who don't understand the science build the wrong things. Listening is a skill.", pts: 10, r: "She laughs. 'I'm going to use that. Listening is a professional skill.'" },
+        { text: "Work that will matter in 20 years is more interesting to understand than to talk past.", pts: 8, r: "'Thank you. I needed to hear that tonight.'" },
+        { text: "I'm just curious by nature. Most people in my field are.", pts: 5, r: "'Maybe. Though curiosity doesn't always make people good listeners.'" },
+        { text: "The sector talks in silos. Crossing them makes me better at my job.", pts: 7, r: "'I need to do more of that. I've been too insular.'" }
+      ]},
+      { t: "I should rehearse my poster. Glad I didn't leave an hour ago.", c: [
+        { text: "I'm glad too. The precision of your claim distinguishes a real contribution from a press release.", pts: 10, r: "'Most useful encouragement I've received. Give you my card?' ✅" },
+        { text: "Gave me a lot to think about on the instrument interface. Let's stay in touch.", pts: 8, r: "'Absolutely. Been thinking about exactly that. Here's my email.' ✅" },
+        { text: "Good luck tomorrow! I'm sure it'll go well.", pts: 5, r: "'Thanks.' Warm smile, but no card offered. ❌" },
+        { text: "Go rehearse. But I'd like to hear how it goes. Way to stay in touch?", pts: 7, r: "'Yes — of course. Let me find my card.' ✅" }
+      ]},
+      { t: "Is there anything you'd want from this conversation — practically?", c: [
+        { text: "A window into how mission scientists specify requirements at the conceptual phase. It would change how I approach design.", pts: 10, r: "'Nobody ever asked that. Yes! Gives you her card.' ✅" },
+        { text: "I'd love to read your paper when it publishes.", pts: 8, r: "'That's generous. Here's my card. Call me after the session.' ✅" },
+        { text: "Nothing specific — it was just a great conversation.", pts: 4, r: "She smiles. 'It was.' She doesn't offer a card. ❌" },
+        { text: "I'd like to send you some thinking on engineering side of instrument trade-offs. Not a pitch.", pts: 7, r: "'Please do. I'll actually read it.' ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Col. James Hartley", role: "Former Astronaut", hint: "Measured, respected. Watching the room with a calm gaze.",
+    opening: "Four of these now. The conversations have gotten sharper. What do you do?",
+    stages: [
+      { t: "...", c: [
+        { text: "Systems engineering on a small launch vehicle. Trying to understand the sector from the institutional side.", pts: 9, r: "'Physics is the same. What's your separation architecture?'" },
+        { text: "Aerospace engineer. I focus on propulsion and structures integration at a NewSpace startup.", pts: 7, r: "'NewSpace. What does that mean to you, specifically?'" },
+        { text: "Wow, you're Colonel Hartley — I actually studied your EVA work at university.", pts: 3, r: "A patient smile. 'What do you do?' He redirects." },
+        { text: "I'm in launch vehicle systems engineering. You said conversations have gotten sharper. What changed?", pts: 8, r: "'More people who've actually built something. Which are you?'" }
+      ]},
+      { t: "Gap between Shuttle and ISS in systems complexity and crew autonomy was enormous. What drove that shift?", c: [
+        { text: "ISS changed the risk model. Long-duration, no immediate return. Shifted from 'survive the mission' to 'sustain the system'.", pts: 10, r: "'Correct and precisely stated. Design philosophy shift is real.'" },
+        { text: "Software and automation complexity. ISS forced automated management that was new.", pts: 8, r: "'Partly right. underlying shift was about who the system was designed for.'" },
+        { text: "Political complexity of a multinational programme changes how decisions get made.", pts: 5, r: "'True. Though I was looking for a technical answer.' He waits." },
+        { text: "Crew autonomy became a requirement once you couldn't rely on ground support. Latency.", pts: 6, r: "'Important thread. What does it imply for deep space architecture?'" }
+      ]},
+      { t: "Columbia accident board said NASA culture was as responsible as the foam. Do you agree?", c: [
+        { text: "Yes. Leson is 'normalisation of anomaly'. Risk model quietly recalibrated without authority.", pts: 10, r: "Long pause. 'You've actually read the board report. He's reassessing you.'" },
+        { text: "Cultural diagnosis is right but incomplete without institutional pressures like budget.", pts: 8, r: "'Agreed. Did you look at what NASA actually implemented?'" },
+        { text: "I think both factors were real. Physical and organisational failures reinforced each other.", pts: 5, r: "'True but general. How would you manage safety culture vs schedule pressure?'" },
+        { text: "Blaming culture can diffuse accountability. Someone made specific decisions.", pts: 6, r: "'Interesting tension. The board struggled with that too.'" }
+      ]},
+      { t: "Commercial companies move faster but know less about what they don't know. Fair?", c: [
+        { text: "Fair. Institutional knowledge doesn't transfer automatically. Concern is knowledge missing because nobody knows it is missing.", pts: 10, r: "'That last sentence. Say it again.' He leans forward." },
+        { text: "Fair in aggregate but masks variance. Some commercial teams are extremely disciplined.", pts: 7, r: "'Agreed. How do you benchmark your own team's gaps?'" },
+        { text: "I think commercial companies are learning fast and pace of iteration makes up for the deficit.", pts: 4, r: "'Iteration teaches what you test for. What about failure modes you haven't thought of?'" },
+        { text: "Fair, and institutional side has reciprocal problem: lost ability to move when situation changes.", pts: 8, r: "'Yes. Institutional pathology is rigidity. Commercial one is arrogance.'" }
+      ]},
+      { t: "What do you think people are actually asking when they ask 'What is it like in orbit'?", c: [
+        { text: "Asking whether experience changed how you see the engineering. Whether sitting in it changed your relationship to building it.", pts: 9, r: "Quiet moment. 'That is the question I wish people asked. It did. Profoundly.'" },
+        { text: "Permission to imagine it for themselves. Proxy question for 'what would I feel if it were me'.", pts: 7, r: "'Accurate for most. What would you feel — if it were you?'" },
+        { text: "They want to know if the Overview Effect is real.", pts: 4, r: "'It's real. Though 'effect' makes it sound smaller than it is.' Quiet." },
+        { text: "They're probably asking whether it was worth the risk.", pts: 6, r: "'Yes, and they're hoping I'll say yes so they stop worrying on behalf of future astronauts.'" }
+      ]},
+      { t: "Moon, Mars, or neither in your lifetime — what do you actually think?", c: [
+        { text: "Moon, sustainably, within 15 years. Mars only if we solve long-duration radiation exposure. Not close to that practically.", pts: 9, r: "'Radiation. The one problem that doesn't yield to money. He says it like he was in that room.'" },
+        { text: "Moon is closer than schedules suggest. Mars is further once you price in unsolved human factors.", pts: 8, r: "'Moon is engineering problem. Mars is biology problem dressed as engineering.'" },
+        { text: "I think Moon is realistic. Mars feels like a generation beyond our capability.", pts: 5, r: "'Conservative read but probably correct. What would change that timeline for you?'" },
+        { text: "I think we'll get humans to lunar surface again within the decade. After that, I don't know.", pts: 6, r: "'Safe answer. What do you believe, not what you'll hedge to?'" }
+      ]},
+      { t: "What standard do you hold your own work to?", c: [
+        { text: "Ask whether I'd be comfortable presenting every technical decision to the crew that flies the vehicle.", pts: 10, r: "He looks at you. 'That is the correct standard. The only standard.'" },
+        { text: "Whether design is honest about its own failure modes. Documenting uncertainties.", pts: 8, r: "'Yes. Most dangerous line in a design review is 'expected to be benign'.'" },
+        { text: "Whether it meets requirements and passes review. Objective standard.", pts: 5, r: "'Requirements are a floor. What's above the floor for you?'" },
+        { text: "Whether I'd be willing to stand behind it publicly if something went wrong.", pts: 7, r: "'Close. Would you stand behind it before anything went wrong?'" }
+      ]},
+      { t: "ISU cross-trains across sectors. What is still missing in how we develop engineers?", c: [
+        { text: "Exposure to failure at system level, early. Training on components makes engineers technically excellent but systemically naive.", pts: 10, r: "'Say that in the board meeting. We've been trying to articulate that gap for years.'" },
+        { text: "Excellent analysts but weak decision makers. Training is optimised for analysis, not for incomplete data/deadlines.", pts: 8, r: "'Decision-making under uncertainty. Should be a required course.'" },
+        { text: "More interdisciplinary exposure. Policy, law, business are useful inputs.", pts: 5, r: "'True, but that's breadth. Where does technical depth let people down?'" },
+        { text: "Human interface. How to communicate risk to non-technical decision-maker without overstating it.", pts: 7, r: "'Risk communication. Yes. Failure mode that caused Columbia, in part.'" }
+      ]},
+      { t: "This has been more substantive than I expected. What were you hoping to take away?", c: [
+        { text: "Perspective of an end user of the systems I design. I can model requirements, but not what it changes in a person.", pts: 10, r: "Quiet, then: 'Give me your card. I want to continue this.' ✅" },
+        { text: "Understanding how sector looks to someone who's seen both sides of institutional divide.", pts: 8, r: "'Then it wasn't wasted for either of us.' ✅" },
+        { text: "Connections, primarily. Events are as valuable as the relationships they produce.", pts: 5, r: "'Reasonable, though unoptimised conversations produce the best ones.' ❌" },
+        { text: "Meeting people who've seen programmes succeed and fail. Pattern recognition.", pts: 7, r: "'Pattern recognition. Good phrase. What patterns are you tracking?' ✅" }
+      ]},
+      { t: "I have a board dinner. What would you want me to remember about this conversation?", c: [
+        { text: "That there are engineers in commercial sector trying to close knowledge gaps by asking right people right questions.", pts: 10, r: "'You have been. If you're ever in Houston, come find me.' ✅" },
+        { text: "That standard I described — would I present this to the crew — isn't rhetoric. It's how I work.", pts: 8, r: "'Then here. Card given. Don't let that standard erode.' ✅" },
+        { text: "Just that I'm grateful for the time. Meant a lot.", pts: 4, r: "Warm nod. 'Likewise.' He walks away. ❌" },
+        { text: "That systems engineering question I'm working on — genuinely value your experience.", pts: 7, r: "'Send me the specific problem. I'll give you a specific answer.' ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Yuki Tanaka", role: "Lunar Policy Lead", hint: "Diplomatic appearance, listening intently to a nearby debate.",
+    opening: "The Artemis Accords panel was interesting. How are you reading the current state of lunar governance?",
+    stages: [
+      { t: "...", c: [
+        { text: "From engineering side, read is how regulatory uncertainty affects mission design. Resource extraction creates ambiguity.", pts: 8, r: "'Useful frame. What specifically creates ambiguity in your design work?'" },
+        { text: "Accords are interesting workaround to OST, but implementation gap seems significant.", pts: 7, r: "'Implementation gap' is the right focus. What's the primary failure mode?" },
+        { text: "I haven't followed it as closely as I should. Panel takeaway?", pts: 3, r: "Pause. 'Several. But what are your instincts, even without context?'" },
+        { text: "Accords are effective as norm-building but fragile. Hub-and-spoke dependency on US seems politically non-durable.", pts: 9, r: "'Precisely the concern my legal team is documenting. Following COPUOS?'" }
+      ]},
+      { t: "Unusual to hear an engineer engage with governance. Most treat it as someone else's problem.", c: [
+        { text: "Regulatory environment is a design input. Legally inoperable system is a requirements failure I own.", pts: 10, r: "'Framing as design input is more sophisticated than most policy pros. Where'd that come from?'" },
+        { text: "Engineers who ignore policy design in a vacuum. Lunar environment is both physical and legal.", pts: 8, r: "'Physical and legal. They interact in ways that aren't obvious until something breaks.'" },
+        { text: "I try to be broad in my thinking. Space is interdisciplinary.", pts: 5, r: "'Broad thinking is valuable, but substance matters. What intersection concerns you most?'" },
+        { text: "Forced to think about it because customers ask. Constellation operators have legal teams.", pts: 7, r: "'Good. Customer-driven awareness is more durable than philosophical interest.'" }
+      ]},
+      { t: "Company working on defining 'operational exclusion zones' around assets. How would you approach it?", c: [
+        { text: "Start from operational envelope — plume, ejecta, EMI — to define physical minimum. Layer governance as buffer.", pts: 10, r: "'That's essentially the framework our teams have been arguing over for 6 months. Introduction?'" },
+        { text: "Technical component (safety distances) vs political (precedent). Separate them explicitly in docs.", pts: 8, r: "'Harder than it sounds. What's the risk if you conflate them?'" },
+        { text: "Look at analogs — maritime zones, airspace management — and adapt.", pts: 5, r: "'Analogs useful, but no equivalent context. What assumptions break when applied to vacuum?'" },
+        { text: "Question needs resolving before conflict forces it. What's your timeline for a working definition?", pts: 7, r: "'Planning 2028 surface operation. Need consistent definition by 2026.'" }
+      ]},
+      { t: "How familiar are you with Article II of OST vs US resource rights (CSLCA)?", c: [
+        { text: "I know the tension. Legal argument is you aren't claiming the Moon, just the ice you extracted.", pts: 9, r: "'Described core argument correctly. Where does the distinction fail under pressure?'" },
+        { text: "I know basics. Engineering concern is whether licence actually provides operational certainty.", pts: 7, r: "'Right commercial test. What would 'sufficient certainty' look like to an engineer?'" },
+        { text: "I know Article II is foundational. Less across CSLCA specifics.", pts: 4, r: "'CSLCA matters enormously for your customers' business models.'" },
+        { text: "I know enough to know it's contested. Rather understand it better than pretend I do.", pts: 6, r: "'Appropriate epistemic humility. Let me give you a 30-second summary.'" }
+      ]},
+      { t: "What's the most acute regulatory friction you're experiencing in your current work?", c: [
+        { text: "Launch licensing timeline for non-standard separation. FAA hazard templates don't map to our isolation approach.", pts: 10, r: "'Part 450 assumes certain failure modes. Have you engaged the FAA directly?'" },
+        { text: "ITAR classification on avionics is creating lead time disproportionate to sensitivity.", pts: 8, r: "'ITAR friction is under-discussed. What's the classification basis?'" },
+        { text: "Mostly internal — getting legal and engineering to agree on documenting uncertainty.", pts: 5, r: "'Internal alignment is real, but I was asking about external challenges.'" },
+        { text: "Frequency coordination for telemetry system. ITU process is slow.", pts: 7, r: "'ITU coordination is a long lead item many under-resource. Spectrum profile?'" }
+      ]},
+      { t: "Translation between engineers and lawyers is painful. What would make it better from your side?", c: [
+        { text: "Engineers need to understand legal language is precision language. Treat contracts like ICDs.", pts: 10, r: "'That analogy — contract as ICD — is the most useful bridge I've heard in 5 years.'" },
+        { text: "Earlier involvement. Legal reviews after design is frozen are adversarial. Requirements phase is collaborative.", pts: 8, r: "'Yes. Legal as design input. Meets resistance from both sides.'" },
+        { text: "Simpler language in documents. If I can't parse it, I can't implement it.", pts: 5, r: "'Simplification sacrifices precision. Goal is shared vocabulary, not simplicity.'" },
+        { text: "Defined handoff points. Ambiguity at the interface is where mistakes happen.", pts: 7, r: "'Interface definition. Of course an engineer would frame it that way.' Warmth." }
+      ]},
+      { t: "Japan's Basic Space Law represents a different model. Know anything about it?", c: [
+        { text: "Framework is more collaborative, structured as joint development rather than arms-length procurement.", pts: 9, r: "'IP and liability in joint development — that's the precise tension being tested.'" },
+        { text: "2008 Basic Space Law enabled commercial development. Familiar with outcomes more than framework.", pts: 7, r: "'Framework shapes the outcomes. Which have you been following?'" },
+        { text: "I'm not very familiar with the Japanese regulatory model, honestly.", pts: 4, r: "'Gap worth closing. Japan is one of the most sophisticated environments.'" },
+        { text: "Japan's commercial ambitions are expanding. Curious how model handles foreign launch customers.", pts: 6, r: "'Active question. There is a path, but involves bilateral coordination.'" }
+      ]},
+      { t: "What's your nightmare scenario for lunar governance over the next decade?", c: [
+        { text: "Property dispute between operators of different flags where no bilateral agreement has jurisdiction. Retroactively voids investment.", pts: 10, r: "'Specific and operationally precise. Permission to use that framing in a briefing?'" },
+        { text: "Mission failure that is technically ambiguous. Attribution question triggers diplomatic incident.", pts: 8, r: "'Attribution under ambiguity. Sector has no agreed forensic protocol. Gap is real.'" },
+        { text: "China and US establishing incompatible frameworks forcing nations to choose.", pts: 5, r: "'That's geopolitical scenario. I was asking about governance failure mode.'" },
+        { text: "First-mover advantage dynamic where whoever establishes presence sets de facto norms.", pts: 7, r: "'Facts on the ground' problem. How would you mitigate it from engineering side?'" }
+      ]},
+      { t: "What did you expect from a policy conversation tonight? Has this been it?", c: [
+        { text: "Expected to feel like a tourist. Instead found your questions directly load-bearing for design decisions.", pts: 10, r: "'Exactly response I hope for. Take my card. Need your review on a policy brief.' ✅" },
+        { text: "Expected useful but parallel conversation. Didn't expect direct application to an active design problem.", pts: 8, r: "'Then let's not let it end here. What's the design problem?' ✅" },
+        { text: "Better than expected. I need to understand policy layer better than I do.", pts: 5, r: "'Good instinct. Where would you start?' ❌" },
+        { text: "Come away with three questions I didn't have before. Best metric for a conversation.", pts: 7, r: "'What are the three questions?' She is curious. ✅" }
+      ]},
+      { t: "Need to find my CEO. What should I know about you that we haven't covered?", c: [
+        { text: "Building a system that needs licence for non-standard architecture. Would benefit from policy pro who understands technical design.", pts: 10, r: "'Call me before you file. Better if framing is coordinated.' ✅" },
+        { text: "I'm an engineer who wants to understand the policy environment well enough to not always outsource that judgment.", pts: 8, r: "'Goal is more achievable than most believe. I'll send two docs.' ✅" },
+        { text: "I think you have a pretty complete picture. Excellent conversation.", pts: 4, r: "'Thank you.' Warm but no card. ❌" },
+        { text: "I have a specific proposal for structuring the technical-minimum definition of exclusion zones.", pts: 7, r: "'Send a one-page summary. I'll respond within the week.' ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Tariq Al-Rashid", role: "GSA Comms Director", hint: "Charming, culturally fluent. Watching the room.",
+    opening: "The space sector is far more global than most people think. Would you agree?",
+    stages: [
+      { t: "...", c: [
+        { text: "Engineering reality before it's political. Supply chain for launch crosses a dozen countries before integration.", pts: 9, r: "'Supply chain argument is one I don't hear often. Where does yours run?'" },
+        { text: "Completely. UAE's Hope mission demonstrated mission leadership could come from different part of world.", pts: 8, r: "'What does our surprise reveal about the assumptions we carry?'" },
+        { text: "Yes, though main players are still US, European, Chinese. Rest catching up.", pts: 2, r: "'Catching up' implies a single direction of travel. Does that framing serve us?'" },
+        { text: "I'd agree, though 'global' gets used as descriptor without interrogating power vs participation.", pts: 9, r: "'That distinction is exactly what I spend my life navigating.'" }
+      ]},
+      { t: "Gulf Space Agency was established less than a decade ago. Westerners treat us as a curiosity. What are we actually doing?", c: [
+        { text: "Investment in ground infrastructure, EO for climate, and effort to build domestic workforce. Science rationale is real.", pts: 9, r: "'Done homework. Workforce story is one we want told. What do you make of strategy?'" },
+        { text: "Hope mission is headline, but understanding ambition goes further — lunar, commercial capability.", pts: 7, r: "'Commercial development is where interesting engineering problems are.'" },
+        { text: "Mainly Mars mission and UAE ambition to diversify economy. Curious to learn more.", pts: 4, r: "'That's the PR version. I appreciate the honesty about the gap.'" },
+        { text: "Watching ground station network development. Building sovereign infrastructure before large manifest is strategic.", pts: 8, r: "'Exactly the strategic logic. Few outside our planning team articulated that.'" }
+      ]},
+      { t: "Partnership dynamic with foreign technical partners is complicated. Worked across international teams?", c: [
+        { text: "Yes. Engineering cultures differ in risk tolerance, documentation, escalation. Create real interface problems.", pts: 10, r: "'Tolerance difference we encounter constantly. How do you resolve that?'" },
+        { text: "Worked with international suppliers. Hardest thing is difference in what counts as a closed action.", pts: 8, r: "'Precision point that causes real damage. We've experienced that.'" },
+        { text: "Mainly through components and supplier relationships. Full team integration rarer.", pts: 5, r: "'It will become more common. What would you do differently for international team?'" },
+        { text: "Found interface docs more important when you can't rely on informal conversation. Written spec carries more weight.", pts: 7, r: "'Documentation as primary channel. Requires writing culture not all have.'" }
+      ]},
+      { t: "What's the honest perception of the Gulf space programme among the engineers you work with?", c: [
+        { text: "Mixed. Hope changed minds on capability. Remaining scepticism is about sustainability vs soft power optics.", pts: 9, r: "'Soft power question is the one I answer most. What would change perception?'" },
+        { text: "Research community perception changed. Engineering community focused on native expertise vs assembled foreign talent.", pts: 7, r: "'Goal is 20-year development, not instant expertise. Does that change assessment?'" },
+        { text: "I think a lot of people see it as prestige project rather than serious activity.", pts: 3, r: "'Perception exists. It's wrong. What would 'serious' look like to those people?'" },
+        { text: "Increasingly respectful. People are curious about the follow-on — what's next chapter?", pts: 8, r: "'Follow-on is real story. What would you want it to be?'" }
+      ]},
+      { t: "What would you want from us? What does a relationship with GSA look like that's useful to you?", c: [
+        { text: "Access to launch infrastructure as commercial customer. Peer relationship solving real problems.", pts: 10, r: "'Commercial, not grant. Framing matters enormously. That's what we want to build.'" },
+        { text: "Technical collaboration on component level — specifically frequency coordination. Reciprocal problem solving.", pts: 8, r: "'Specific and reciprocal. What's the frequency coordination problem?'" },
+        { text: "Understanding of regulatory environment — path for foreign launch vehicles under GSA oversight.", pts: 5, r: "'There is a path. I can point you toward the right conversation.'" },
+        { text: "Access to test environments. Geography and weather create interesting conditions harder to replicate in US.", pts: 7, r: "'Had that conversation with European companies. What kind of testing?'" }
+      ]},
+      { t: "My job is to explain technical programme to heads of state and children. What does sector do badly in comms?", c: [
+        { text: "Leads with machinery instead of problem. Nobody asks who it serves. Engineering is not the story.", pts: 9, r: "'Argument I make internally every week. Thank you for making it from outside.'" },
+        { text: "Underestimates audiences. Instinct to simplify results in infantilising. Lose the most engaged people.", pts: 8, r: "'Respect dimension. Audience is sophisticated and doesn't want to be talked down to.'" },
+        { text: "Too jargon-heavy for general audiences.", pts: 5, r: "'That's surface symptom. What's the underlying failure?'" },
+        { text: "Optimises for excitement over accuracy. 'Mars in 5 years' creates credibility damage when timelines slip.", pts: 7, r: "'Hope had policy: state science, state engineering, state uncertainty. Held up.'" }
+      ]},
+      { t: "How much does your company think about the geopolitical fragility of your supply chain?", c: [
+        { text: "More than we used to. Mapping single-source dependencies from countries where export controls could tighten.", pts: 10, r: "'Mapping is first step most companies skip. What's highest risk dependency?'" },
+        { text: "Known gap. Supply chain was designed for cost, not resilience. Current environment forcing rethink.", pts: 8, r: "'That tension is everywhere. What does the rethink look like for you?'" },
+        { text: "We think about it. ITAR is immediate constraint, but broader risk is background concern.", pts: 5, r: "'ITAR is visible constraint. Invisible one is manufacturing dependency. Mapping that?'" },
+        { text: "Sector under-prices geopolitical risk because consequences are slow-moving and hard to attribute.", pts: 7, r: "'Under-pricing slow-moving risk. How we described climate risk 20 years ago.'" }
+      ]},
+      { t: "What drove you into aerospace specifically? Not polished answer — real one.", c: [
+        { text: "Wanted to work on something that didn't have obvious answers. basic physics is settled elsewhere. Here you're still finding the edge.", pts: 9, r: "'More honest. Unusual word for engineering motivation. I understand completely.'" },
+        { text: "Built model rocket that worked when I was 12. Wanted to understand every decision in it. Still don't.", pts: 8, r: "'The 12-year-old who hasn't finished asking the question. Best origin story.'" },
+        { text: "Grew up watching Shuttle launches and never lost the feeling.", pts: 5, r: "'Many have that origin. What made you go technical rather than policy?'" },
+        { text: "Teacher told me I was good at systems thinking. Aerospace was the application that fit the aptitude.", pts: 7, r: "'Teacher answer. Important people are those who identified something in a child.'" }
+      ]},
+      { t: "Few engineers tonight didn't treat me as funding or novelty. What are you taking from this conversation?", c: [
+        { text: "Different mental model of 'global space sector'. Architecture of who makes decisions and holds dependencies.", pts: 10, r: "'Then I've done my job. Stay in touch. I can open some doors.' ✅" },
+        { text: "Reminder that policy and comms are as technically demanding as engineering. I'll be more honest with my team.", pts: 8, r: "'That acknowledgment means more than you know.' ✅" },
+        { text: "A lot, honestly. One of the better conversations of the evening.", pts: 5, r: "He smiles. 'Good.' Waits to see if you add substance before reaching for card. ❌" },
+        { text: "Specific question: how should engineering teams price geopolitical risk in supply chain design?", pts: 7, r: "'Neither does sector. Asking is first step. I'll give you a contact.' ✅" }
+      ]},
+      { t: "Last thing — what do you want me to tell people about you after tonight?", c: [
+        { text: "Systems engineer building a small launch vehicle who understands technical and geopolitical are same environment.", pts: 10, r: "'That I can do. Firm handshake. Card given.' ✅" },
+        { text: "Just that the conversation was worth having. Whatever comes from it is enough.", pts: 8, r: "'More than enough.' Card given warmly. ✅" },
+        { text: "Nothing specific — I just want to do good work. Reputation follows.", pts: 4, r: "'Healthy attitude. Though people need a handle.' Moves on. ❌" },
+        { text: "That I'm the person to call when engineering problem and political problem turn out to be the same.", pts: 7, r: "'I know two people who need that call right now.' Card given. ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Dr. Ingrid Solberg", role: "Chief Medical Officer", hint: "No-nonsense appearance, looking at crew health data.",
+    opening: "We're sending more non-professional astronauts to orbit than ever before. Do you work anywhere near the human side?",
+    stages: [
+      { t: "...", c: [
+        { text: "Not directly in crew health, but human factors outputs feed into my systems design. Interface between crew display and flight termination.", pts: 9, r: "'Tense design space. What's the human decision point in your architecture?'" },
+        { text: "On hardware side. But human factors question going to become unavoidable for launch engineers.", pts: 7, r: "'Already is. You're just later to realization than medical side.' Blunt." },
+        { text: "Not really — focus on propulsion and structural integration. Life sciences is separate.", pts: 4, r: "'It won't remain separate. False abort triggered by non-pro response is propulsion problem.'" },
+        { text: "Engineer, not medically trained, but thinking about physiological stress on reliability of human-in-the-loop systems.", pts: 8, r: "'Intersection where most accidents happen. What's your specific concern?'" }
+      ]},
+      { t: "Certification standards for commercial crew were inherited from pro astronauts. Appropriate?", c: [
+        { text: "Almost certainly not. Pros screened for sustained stress vs commercial passengers face single acute event.", pts: 10, r: "'Mission-derived standards. Yes. Resistance is from people who can't separate 'what we tested' from 'need'.'" },
+        { text: "Probably not for civilians, but operator standards might hold — pilot and crew chief roles.", pts: 8, r: "'Stratified standards. What would you need to know medically to design around it?'" },
+        { text: "I assume standards are being updated — seems like obvious thing to do.", pts: 5, r: "'Surprised how slowly 'obvious' moves. What should update prioritise?'" },
+        { text: "Existing standards are conservative enough to cover unknown unknowns in civilian population. Over-prescription as buffer.", pts: 7, r: "'Defensible argument. My counter is that it creates compliance theatre rather than safety.'" }
+      ]},
+      { t: "Real problem: design habitation module alarm system for crew who never experienced high-fidelity alarm environment.", c: [
+        { text: "Suppress nuisance alarms aggressively, make first-alert unmistakable. Need population testing.", pts: 10, r: "'Single principle would eliminate 60% of incidents. Right about population gap.'" },
+        { text: "Start from failure mode — risk when naive crew misreads alarm. Distinction between informational and actionable.", pts: 8, r: "'Designers get that wrong because they design for trained operators.'" },
+        { text: "Look at analogies in consumer safety — fire alarms, medical device alerts.", pts: 5, r: "'Consumer analog is starting point. What breaks when you add microgravity and acute stress?'" },
+        { text: "Training is part of solution — condition alarm response. Changes the design problem.", pts: 7, r: "'Shortens response curve but doesn't eliminate naive tail risk. What if they skipped briefing?'" }
+      ]},
+      { t: "Instinct about why engineers default to thinking human physiology is not a system you can spec and then ignore?", c: [
+        { text: "Because humans are only component that change their own requirements mid-mission. deterministic model is uncomfortable.", pts: 9, r: "'I'm going to use that phrase. Exactly framing that makes engineers uncomfortable in productive way.'" },
+        { text: "Human interface historically added at end of process. Treated as constraint rather than requirement.", pts: 8, r: "'Late-stage vs early requirement. We're fighting to force medical into CDRs. Resistance is real.'" },
+        { text: "Engineers trained to solve problems with definable solutions. Human body doesn't offer that.", pts: 5, r: "'Frustration is starting point. What do engineers do with it that serves design?'" },
+        { text: "Liability logic — if I don't specify it, I don't own it. Domain falls into no-man's-land.", pts: 7, r: "'Ownership gap at interface. 'Nobody owns it' is failure mode that looks like feature until review.'" }
+      ]},
+      { t: "Human interface in your current design — where does human decision matter in architecture?", c: [
+        { text: "Launch director hold decision and crew abort decision during ascent. 400ms to override or initiate.", pts: 10, r: "'400ms is below conscious threshold. Expecting reflexive response or deliberate one?' Leans in." },
+        { text: "Primarily abort sequence. Preserve human override authority at 2 points. Asking decision at moment of peak stress.", pts: 8, r: "'Peak stress and decision authority. What would it take to remove second override?'" },
+        { text: "Flight crew has authority over pre-launch, launch director has hold. Highly automated once committed.", pts: 5, r: "'Pre-launch is lower stress. What about during?'" },
+        { text: "Less than I'd like. human performance model behind decision points is borrowed from other programmes. Not validated.", pts: 7, r: "'Borrowed and unvalidated' is honest answer. What would validation study look like?'" }
+      ]},
+      { t: "Passenger dies on commercial flight. Pre-existing condition wasn't caught. Who's responsible?", c: [
+        { text: "Design responsibility question. Engineering team that spec'd screening protocol owns a share of it.", pts: 9, r: "'Unsettle engineers who think they're insulated by word 'medical'. You're right they aren't.'" },
+        { text: "Legally operator. Ethically diffuses up supply chain to everyone who designed insufficient protocol.", pts: 7, r: "'Legal and ethical responsibility diverging. Gap industry hasn't confronted honestly.'" },
+        { text: "The operator, presumably. They have duty of care relationship.", pts: 4, r: "'That's legal answer. Asking design question. How should responsibility have been designed against?'" },
+        { text: "Whoever made decision to define screening threshold at that level. Design decision with life consequence.", pts: 8, r: "'Documentation of design decision with life consequence. Standard practice I'm trying to make.'" }
+      ]},
+      { t: "Designing medical protocol for 6 month deep space mission — no return, no real-time consultation. Start?", c: [
+        { text: "Defining decision tree for scenarios where intervention necessary/possible — then work backward to autonomous diagnostic tools.", pts: 10, r: "'Tree first, equipment second. Exact opposite of how most approach it.'" },
+        { text: "Psychological resilience as primary failure mode. Risks are better characterised. Tail risk that kills missions.", pts: 8, r: "'Underspecced dimension. What is engineering equivalent as design requirement?'" },
+        { text: "Redundancy in critical supplies and autonomous diagnostic capability. Crew needs to triage without ground.", pts: 5, r: "'Equipment answer. I asked where you'd start. What determines the list?'" },
+        { text: "Crew selection for medical self-sufficiency. Protocol has to assume capable human in loop without doctor.", pts: 7, r: "'Training as infrastructure investment. What training at what level? Taxonomy doesn't exist.'" }
+      ]},
+      { t: "Honestly — how well is commercial sector managing transition from pro to civilian crew? Not publicly.", c: [
+        { text: "Poorly in aggregate. Flying civilians on human factors knowledge base built for pros, validated on handful of missions.", pts: 9, r: "Quiet exhale. 'My concern stated more precisely than I allow myself to say publicly. Thank you.'" },
+        { text: "Better on hardware safety, worse on informed consent. Signing risks they can't meaningfully evaluate.", pts: 8, r: "'Informed consent as design problem. Never heard it framed that way. Say more.'" },
+        { text: "I think it's early and industry is learning fast. Accident rate has been low.", pts: 5, r: "'Low accident rate is not validated safety signal. We haven't flown enough to know what we don't know.'" },
+        { text: "Companies I respect build real medical capability, not treating it as regulatory checkbox. Minority.", pts: 7, r: "'What distinguishes them, in your observation?'" }
+      ]},
+      { t: "Where do launch systems engineering and crew health actually need to be in same room?", c: [
+        { text: "Abort system design. Medical criteria for when abort necessary and architecture for how it executes need co-design.", pts: 10, r: "'I want to introduce you to my abort sequence lead. I've been looking for engineer to have it.' ✅" },
+        { text: "ECLSS requirements definition. Medical needs to define 'acceptable' before engineering can design system.", pts: 8, r: "'Battle I fight at every programme. Engineer saying that out loud would help enormously.' ✅" },
+        { text: "Crew training design. Informed by what vehicle requires and what human can absorb under stress.", pts: 5, r: "'Training is downstream output. Where are upstream decisions co-made?' ❌" },
+        { text: "Risk model review process. Models built separately and reconciled. Should be built together.", pts: 7, r: "'Joint risk model construction. tools and culture don't support it. Change what first?' ✅" }
+      ]},
+      { t: "I don't give my card to many engineers. What would you do with it if I did?", c: [
+        { text: "Use it before next abort sequence review. Ask you to tell me where medical assumptions are wrong. Real exchange.", pts: 10, r: "'Exactly how I want to be used. Send me the architecture document.' ✅" },
+        { text: "Follow up on alarm hierarchy study. I have data from avionics display testing useful as baseline.", pts: 8, r: "'Data sharing. Specific and reciprocal. Send me study parameters.' ✅" },
+        { text: "Keep it, and reach out when I have a specific question.", pts: 4, r: "'When I have a specific question' could be never. What question you already have? ❌" },
+        { text: "Introduce you to our flight director. Conversation about human decision architecture she's been trying to have for months.", pts: 7, r: "'Should have reached out 6 months ago. But yes. Make introduction.' ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Lena Krauss", role: "TU Delft Master's Student", hint: "Eager, well-read, but looking slightly intimidated.",
+    opening: "I keep waiting for someone to ask me why I'm here before I can ask them. Does that make sense?",
+    stages: [
+      { t: "...", c: [
+        { text: "Completely. Spent first professional conference doing same thing. Systems engineer on launch startup. Why you here?", pts: 9, r: "Visibly relaxes. 'Space systems engineering, final year. Still surprised I got in.'" },
+        { text: "It makes complete sense. Dynamic disadvantages people who wait to be asked. So — why you here?", pts: 7, r: "'Masters student, space systems at Delft. I feel very out of my depth.'" },
+        { text: "You should just introduce yourself. Everyone's in same boat.", pts: 3, r: "Polite nod. 'Right. Yes. I know.' She doesn't feel you understood her." },
+        { text: "Format advantages people who know each other. First sentence is hardest. What's yours?", pts: 8, r: "She laughs. 'I'm Lena. Working on modular spacecraft architecture. Best I can do.'" }
+      ]},
+      { t: "Thesis is on reconfigurable modular spacecraft architecture. Can you design a bus that changes payload configuration without going back to factory?", c: [
+        { text: "Standardisation challenge is significant. If payload community doesn't adopt interface, reconfigurability is theoretical. How handling adoption?", pts: 10, r: "'Supervisor pushed back on first draft there. Most ask mechanical. You went straight to hard part.'" },
+        { text: "In-space reconfiguration or ground-based? Thermal and structural implications are different.", pts: 8, r: "'Both. In-space is more novel. Nobody done in-orbit thermal management rigorously.'" },
+        { text: "Fascinating idea. Have prototype or mainly analytical?", pts: 5, r: "'Simulation-based. Small physical demonstrator. Is lack of hardware problem for credibility?'" },
+        { text: "What's primary driver — cost reduction, mission flexibility, or redundancy?", pts: 7, r: "'All three, but thesis frames it around flexibility. Cost follows if achieves volume.'" }
+      ]},
+      { t: "Sometimes worry thesis problem is very academic and industry doesn't actually have this problem in form I've framed it.", c: [
+        { text: "Framing might be academic but underlying problem is real. Operators moving toward in-orbit servicing. Map specification to standards?", pts: 10, r: "'I should be talking to operators directly. Treated this as design, not standards problem.' Note on phone." },
+        { text: "Industry just describes it differently. 'Platform reuse', 'modularity'. Thesis probably more rigorous than current solutions.", pts: 8, r: "'You're saying contribution is rigour, not novelty. Reframe is helpful.'" },
+        { text: "Academic work should be ahead of where industry is — point of research.", pts: 5, r: "'I know theory. But I want work to be useful. Does the gap ever close?'" },
+        { text: "Whether framing matches addressable market is question to test. Talked to manufacturers about multi-mission platform decisions?", pts: 7, r: "'Not yet. Nervous about reaching out cold. Do you think they'd respond?'" }
+      ]},
+      { t: "Not sure whether to go into industry or pursue PhD. PhD is 'safer' but not sure that's right reason.", c: [
+        { text: "Delaying decision is worth interrogating. PhD give you what master's hasn't? If answer is 'more time', not good enough.", pts: 9, r: "Quiet moment. 'Don't have burning research question. Have burning desire to build. Answers it.'" },
+        { text: "What problem you want to solve in five years? PhD right if path runs through deep original research.", pts: 8, r: "'I want to build something that flies. Definitely industry. I think I knew that.'" },
+        { text: "Academia and industry need different things. What do you want to give?", pts: 5, r: "'I want to give precision and intensity to a hard problem. Favour one path?'" },
+        { text: "Talk to people who went both ways and ask what they regret. Not what they'd choose — what they regret.", pts: 7, r: "'Regret as data source. Unexpectedly practical. Do you have any regrets about your path?'" }
+      ]},
+      { t: "What would you tell someone in my position about to enter industry? Real advice, not LinkedIn version.", c: [
+        { text: "Find most technically demanding engineer in room and ask question you're most afraid of. Ones who answer seriously make you good.", pts: 10, r: "Writes it down. 'Most useful thing anyone's said to me tonight. Maybe all month.'" },
+        { text: "Own mistakes faster than organisation processes them. Builds trust technical competence alone doesn't.", pts: 8, r: "'Own mistake faster than process. wouldn't have thought to frame it that way, but believe it.'" },
+        { text: "Be patient. Takes time to find place and earn credibility. Everyone starts somewhere.", pts: 5, r: "'I know. I just don't want to lose urgency while being patient.'" },
+        { text: "Don't perform competence. Ask questions that show you understand shape of what you don't know.", pts: 7, r: "'Understand shape of what you don't know. I'm going to need a minute with that.'" }
+      ]},
+      { t: "When senior engineers give advice to students, is it ever actually useful? Or mostly what worked for them 20 years ago?", c: [
+        { text: "Challenge is fair. Advice on career paths is often structurally wrong. Meta-skills like thinking under uncertainty transfer.", pts: 10, r: "'Surprisingly honest answer from someone giving me advice. Which meta-skills transfer?'" },
+        { text: "30% useful, 70% survivorship bias. People here are here because their path worked.", pts: 8, r: "'30/70. Useful calibration. Where does your advice fall?'" },
+        { text: "Good advice is timeless — principles don't change even if specifics do.", pts: 4, r: "'Might be true of principles. Is that what most advice here actually is?' Unconvinced." },
+        { text: "Biography dressed as advice. Tell is whether person asking questions or just telling what they did.", pts: 7, r: "'By that standard, you've been asking questions. unusually useful conversation.'" }
+      ]},
+      { t: "I want to ask something technical. in my architecture, in-orbit thermal interface is hardest problem. Instinct?", c: [
+        { text: "Interface conductance requirement is most sensitive variable. Flip dependency: let structural interface be designed to meet thermal.", pts: 10, r: "'Exactly backwards from how model currently built. pulling out notebook.'" },
+        { text: "What's heat source profile? Transient case during reconfiguration when broken contact is worst-case.", pts: 8, r: "'Transient between configurations. Gap in my model there. Step change assumption might not hold.'" },
+        { text: "Considered cold plates vs heat pipes for interface — choice changes depending on power levels.", pts: 5, r: "'Modelled both. Heat pipe has better transient but geometry is constraint. Stuck on optimisation.'" },
+        { text: "What are payload power ranges? Highest-power case probably dominates. Don't over-design for edge case.", pts: 7, r: "'50W to 800W. 800W case driving design — too wide a range for single spec?'" }
+      ]},
+      { t: "You've actually engaged with my work properly. Most people glaze over or ask if I want to work for them.", c: [
+        { text: "Recruiting problem disguised as mentoring culture. I'd rather understand what you're working on. Genuinely interesting.", pts: 9, r: "'Most refreshing thing I've heard tonight. Can I stay in touch? follow-up questions on conductance.' ✅" },
+        { text: "Architecture problem worth engaging properly. Design for reconfigurability when interface isn't fully defined generalises.", pts: 8, r: "'It does generalise. where does it show up for you?' ✅" },
+        { text: "Thank you — I find the work interesting and it shows, I suppose.", pts: 5, r: "'It does show. It's unusual.' She waits for more. ❌" },
+        { text: "Spent two years having work half-listened to while other person scanned room. bad habit makes people worse.", pts: 7, r: "'Does it get better as you get more senior?' ✅" }
+      ]},
+      { t: "I should find rest of student group. But this has been genuinely helpful.", c: [
+        { text: "Thermal-structural dependency inversion is real insight. Don't let defence pressure push you into solution before insight developed.", pts: 10, r: "Relief. 'Nobody said that yet. Can I give you my email? Want to send updated section.' ✅" },
+        { text: "I'd like to follow up on interface conductance framing. willing to share section of thesis model?", pts: 8, r: "'Yes. Please. Been doing this in relative isolation for 8 months.' Email exchanged. ✅" },
+        { text: "Good luck with the thesis. Sounds like genuinely good work.", pts: 5, r: "'Thank you.' She smiles. No contact. ❌" },
+        { text: "Go find your group. Reach out when you've flipped the dependency — curious if trade space opens up.", pts: 7, r: "'I will. Here's my university email.' ✅" }
+      ]},
+      { t: "Can I ask — why did you engage with me as seriously as you did? Most people at this level don't.", c: [
+        { text: "Problem unsolved and interesting. You asked question most pros never ask. Engineers I respect good at your stage for reasons not on CV.", pts: 10, r: "'Kindest thing anyone said. Gives card, supervisor email, offer to introduce professor.' ✅" },
+        { text: "Good engineering thinking is good regardless of year. You asked sharp question about advice when most just absorb it.", pts: 8, r: "'Thank you. Here's my card. I'll send thermal section when updated.' ✅" },
+        { text: "Everyone deserves a serious conversation. Shouldn't be remarkable.", pts: 5, r: "'It is, though.' Gives student card. Warm close. ✅" },
+        { text: "Reminded me of where I was 8 years ago and conversations I needed that I didn't get. Rather fix asymmetry than perpetuate it.", pts: 7, r: "'Answer I least expected and most appreciate.' Card given. ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Robert 'Bob' Carver", role: "Legacy Aerospace VP", hint: "Old school, watching the room with a skeptical eye.",
+    opening: "Every decade someone tells me everything's about to change. What's your take — is this NewSpace wave different?",
+    stages: [
+      { t: "...", c: [
+        { text: "Launch cost reduction is structural this time — manufacturing philosophy change is real. Technology wave is genuine.", pts: 9, r: "He tilts head. 'Technology vs commercial wave. Precise answer. basis for manufacturing claim?'" },
+        { text: "Honestly, I don't know. case for structural change and case for another bubble. Intellectual honesty is rare.", pts: 8, r: "Slow nod. 'Honest answer. Most sell certainty because uncertainty doesn't raise money. Case for bubble?'" },
+        { text: "Absolutely different this time — old primes can't compete with speed of commercial sector.", pts: 3, r: "Expression doesn't change. 'Hearing 'primes are done' since 1994. What specifically makes it true now?'" },
+        { text: "Depends entirely on whether cost curve holds after first wave of easy wins. Next 20% is harder.", pts: 7, r: "'Right question. Where does cost curve go when product-market fit pressure starts?'" }
+      ]},
+      { t: "Watched three major inflection points from inside. What patterns do you think repeat?", c: [
+        { text: "Capability advances outpace institutional capacity. winners look like predecessors because constraints (physics, capital) are same.", pts: 10, r: "'Last one they don't see coming. Constraints haven't changed because physics hasn't. describing it from outside.'" },
+        { text: "Overestimation of demand timelines. Technology readiness earlier than market readiness. Companies that can't survive gap don't.", pts: 8, r: "'Valley of death. watched good vehicles fail because they flew before customer base existed.'" },
+        { text: "I'm probably not right person to identify patterns across decades. What do you see?", pts: 5, r: "'I'm asking what you see. Pattern recognition isn't only about time. testing whether you'll engage.'" },
+        { text: "Consolidation. Each wave starts fragmented and ends concentrated. Field is going to thin dramatically.", pts: 7, r: "'Yes. Down to how many, do you think?'" }
+      ]},
+      { t: "What's the most expensive programme failure mode you've seen — or been part of?", c: [
+        { text: "Requirements instability. Killed by requirements baseline that kept moving while design tried to follow. Cost of convergence exceeded value.", pts: 9, r: "'Requirements creep. watched five-billion-dollar programme die of that. System-level impact invisible until wasn't.'" },
+        { text: "Integration test discovery. Fundamentally incompatibilities surface at integration. Root cause is insufficient systems authority early.", pts: 8, r: "'We used to have chief systems engineer who could kill a design. Role diluted at primes. Cost: enormous.'" },
+        { text: "Probably too junior to have seen full failure arc of major programme. What's your most significant one?", pts: 5, r: "'I'll answer in a minute. first — what have you seen, even at small scale?'" },
+        { text: "Cultural normalisation of technical risk. Team sees anomaly enough times without consequence, gets reclassified as normal.", pts: 7, r: "'Normalisation of deviance. Challenger literature. You've read it. Not a question.'" }
+      ]},
+      { t: "Building something to compete with companies like mine. Tell me where we're actually vulnerable — honestly.", c: [
+        { text: "Cycle time. Design, test, review cycles calibrated for risk tolerance of government programmes. Needs launch decision in 6 weeks.", pts: 10, r: "'Correct. Not a process problem — governance problem. Requirements of governance requires it.'" },
+        { text: "Cost structure. Carry institutional overhead built for programme volumes commercial launch can't support.", pts: 8, r: "'Overhead argument is true but incomplete. What else?'" },
+        { text: "Don't think it's helpful to be positioning against you — rather find where there's complementarity.", pts: 4, r: "'I asked you to be honest. question was test of whether you know your own competitive position.' Unimpressed." },
+        { text: "Talent pipeline. Engineers you training choosing commercial sector first. Inherit engineers who couldn't get those jobs.", pts: 8, r: "'Talent. Exhales. That one keeps me up at night more than cycle time does.'" }
+      ]},
+      { t: "Where are you vulnerable? Turn it around.", c: [
+        { text: "Capital efficiency. move fast by spending resources we have to re-earn. Single major failure could be terminal.", pts: 10, r: "'Honest answer. Watched dozen companies fold because funding dried up before first revenue flight.'" },
+        { text: "Institutional memory. reinvented things that were solved 20 years ago and didn't know it. Knowledge transfer incomplete.", pts: 8, r: "'Real gap. What have you reinvented that you later found out existed?'" },
+        { text: "Not sure I should be sharing our vulnerabilities with a potential competitor.", pts: 4, r: "'Then you're not playing same game I am. Answer tells me whether you understand your own business.'" },
+        { text: "Supply chain. Dependent on suppliers that primes have relationships with that we don't. Lower in queue.", pts: 7, r: "'Yes. And we know it and use it.' Without apology." }
+      ]},
+      { t: "What systems engineering methodology does your team actually use — not what you say you use?", c: [
+        { text: "Hybrid: 'NASA SE Handbook selectively applied under schedule pressure'. Documentation rigour achievement not same as aspiration.", pts: 9, r: "Almost smiles. 'Most accurate description of small team SE I've ever heard. Gap between aspiration and practice?'" },
+        { text: "Model-based systems engineering, or trying to be. Toolchain integration incomplete. Still carrying legacy processes.", pts: 7, r: "'MBSE theoretically rigorous and practically fragile. failure mode in implementation?'" },
+        { text: "Follow industry standard SE practices adapted for small team agility.", pts: 4, r: "'Industry standard' means nothing specific. What do you actually do on Monday morning?'" },
+        { text: "Requirements management process rigorous, risk register current, design reviews authority to hold changes. 3 non-negotiables.", pts: 8, r: "'Three things. Right. Most teams can't sustain three. How yours hold up under schedule pressure?'" }
+      ]},
+      { t: "Watched lot of talented people fail at building sustainable programmes. What makes you think you're different?", c: [
+        { text: "Not confident I am. trying to make decisions that give me a chance. I know what I don't know better than most.", pts: 10, r: "'Better answer than 'because I'm smarter.' People who said smarter never called me. What specifically don't you know?'" },
+        { text: "Studied enough failures to know patterns. doesn't protect from novel failure modes, reduces probability of dying from known one.", pts: 8, r: "'Studying failure. Not enough people do. What failure are you most worried about replicating?'" },
+        { text: "I think our team culture and our technical approach genuinely set us apart.", pts: 3, r: "'Every team says that. Heard it hundreds of times from people who didn't survive.' He waits." },
+        { text: "Focused on making sure risks I'm taking are visible and chosen rather than invisible and inherited.", pts: 7, r: "'Chosen versus inherited risk. Meaningful distinction. highest inherited risk you're carrying?'" }
+      ]},
+      { t: "I mentor founders and technical leads. Not for equity, because sector is better when knowledge transfers. What want from someone like me?", c: [
+        { text: "Specific pattern recognition. Not general advice. Someone who will read specific design decision and tell me mistake I'm about to make.", pts: 10, r: "'How I'm actually useful. Send me your programme review schedule. I'll look at one.'" },
+        { text: "A read on our systems engineering process. मैनेजिंग requirements stability honestly. failure pattern or not.", pts: 8, r: "'Requirements stability. Specific ask. Can do that. won't enjoy all of it.'" },
+        { text: "Introductions, mainly. Your network is decades deeper than mine.", pts: 5, r: "'least valuable thing I can offer. Give those to people I already trust. What make me trust you?'" },
+        { text: "Honest feedback on one specific decision I'm about to make. Not validated — challenged.", pts: 7, r: "'What's the decision?'" }
+      ]},
+      { t: "You're better at this than most people who come up to me. What makes the difference from your end?", c: [
+        { text: "I tried to have the conversation you'd find interesting rather than the one that would be useful to me. Your side of table.", pts: 9, r: "'You started from my side of table. skill they don't teach. Card.' ✅" },
+        { text: "I assumed you'd heard every pitch, so tried to bring something you hadn't heard. tried.", pts: 8, r: "'You came closer than most.' Reaches for pocket. ✅" },
+        { text: "I don't know. I just tried to be honest.", pts: 5, r: "'Honesty necessary but not sufficient. Answer about requirements stability made difference.' ❌" },
+        { text: "Learned fastest way to access what people know is to show what I know, so they can tell me where I'm wrong.", pts: 7, r: "'Show what you know so they can correct it. Socratic method dressed as engineering.' ✅" }
+      ]},
+      { t: "Going to find a bourbon. Last question — why should I give you my card?", c: [
+        { text: "Because I'm going to have a specific SE problem in 3 months I don't know yet. Rather have number before I discover it.", pts: 10, r: "'Right answer. card placed in hand. Interested to see if you were right.' ✅" },
+        { text: "Because I'm the kind of person who will use it for thing I said, and not anything else. Rarer than should be.", pts: 8, r: "'Yes it is. Card given. One call. Don't waste it.' ✅" },
+        { text: "Because I've genuinely valued this conversation and I'd like to continue it.", pts: 4, r: "'Valuing a conversation isn't reason to give card. what will you do with it?' ❌" },
+        { text: "Because I asked where we were vulnerable and told you where we were. Neither embarrassed me.", pts: 7, r: "'Passes the filter.' Gives card without ceremony. ✅" }
+      ]}
+    ]
+  },
+  {
+    name: "Ambassador Chioma Eze", role: "African Space Advisor", hint: "Stately, strategic. Unimpressed by surface rhetoric.",
+    opening: "Conversations about the future of space are getting richer. Though the people having them don't always reflect who that future belongs to. What's your sense of that?",
+    stages: [
+      { t: "...", c: [
+        { text: "Representation gap most visible at decision-making level — design, procurement, standards. less visible at participation level.", pts: 9, r: "'Distinction matters. Mechanism for closing decision-making gap specifically?'" },
+        { text: "Agree. Sector talks about inclusion considerably more than procurement and hiring decisions reflect.", pts: 7, r: "'Talk versus procurement. where I spend my energy. What change procurement side?'" },
+        { text: "I think it's improving — more space agencies and programmes from emerging economies now.", pts: 3, r: "'Data point. Whether real authority in programmes that matter is different question. Do they?'" },
+        { text: "Sector reflects history of who had capital and technology first. patterns self-reinforcing unless deliberate structural intervention.", pts: 8, r: "'Deliberate structural intervention. form would that take in your sector?'" }
+      ]},
+      { t: "Tell me what you know about the African space sector. Not news headlines — substance.", c: [
+        { text: "Over 20 national space agencies. African Space Agency under AU coordination. EO more mature than exploration.", pts: 9, r: "'More complete than most answers. Data sovereignty is specific issue I want to probe.'" },
+        { text: "Know NigeriaSat and South Africa's SANSA are established. AU working toward continental space policy.", pts: 7, r: "'East Africa is where growth is — Ethiopia, Kenya. Interesting signal.'" },
+        { text: "I know South Africa has a strong programme and some CubeSat efforts coming out of universities.", pts: 3, r: "'View from a university press release. I was asking about strategic picture.' Unimpressed." },
+        { text: "Followed development of ARDC — African Renaissance Satellite — as demonstration of multilateral cooperation not dependent on major power.", pts: 8, r: "'You know ARDC. Unusual. What interests you technically about it?'" }
+      ]},
+      { t: "Explain from engineering perspective: what data sovereignty means for country using foreign-built EO satellite.", c: [
+        { text: "Ground station architecture, encryption key management, downlink access are design decisions that preserve/compromise independent use.", pts: 10, r: "'Most precise technical articulation of argument I've been making in political terms. Write that down.' ✅" },
+        { text: "Architecture of data pipeline — acquisition, processing, distribution — either does or doesn't give independent access.", pts: 8, r: "'Conditional sovereignty. Yes. And 'conditional' is a polite word for 'not'.'" },
+        { text: "I think it means the country has legal ownership of the data produced by the satellite.", pts: 5, r: "'Legal ownership is one layer. what does it mean if you can't process it without foreign assistance?'" },
+        { text: "Technical dependencies in architecture either do or don't give country independent capability.", pts: 7, r: "'Most countries. The exceptions are instructive. Which programmes achieved meaningful independence?'" }
+      ]},
+      { t: "When you design a launch system, do you think about who has access to it?", c: [
+        { text: "Not as much as I should. Customer set shaped by who has capital. access to orbit should be public good. market we're building doesn't serve it.", pts: 9, r: "'Most honest thing an engineer has said. People who claim they can change it usually can't. What would you change?'" },
+        { text: "Indirectly. Price point determines access. distribution of who benefits from lower launch costs isn't something we model explicitly.", pts: 7, r: "'Price point without distribution model. Who benefits in current structure?'" },
+        { text: "I focus on the engineering. Commercial and access questions are for business and policy teams.", pts: 4, r: "'Designing a tool without thinking about who uses it. Choice engineers rarely acknowledge.'" },
+        { text: "Makes me think it should be. If equitable access is design requirement, changes commercial architecture, pricing, infrastructure.", pts: 8, r: "'Equitable access as design requirement. Sentence I want to hear engineers say out loud.'" }
+      ]},
+      { t: "I've spent three years advising African governments on investment decisions. Most common mistake?", c: [
+        { text: "Satellite before ground infrastructure. Buys satellite to demonstrate capability, but ground station and human base aren't built in parallel.", pts: 10, r: "'Mistake I spend most of my time correcting. Sequencing error costs programmes 5 to 10 years.'" },
+        { text: "Single-source dependency. Contracting with one foreign partner for satellite and training. National programme structurally dependent.", pts: 8, r: "'Deliberate strategy by some vendors. How would you design procurement to prevent it?'" },
+        { text: "Underinvestment in human capital side — building satellite faster than you build people who can maintain/operate.", pts: 5, r: "'Human capital part of it. What system-level failure produces the human capital gap?'" },
+        { text: "Over-specifying satellite for symbolic missions rather than practical applications. Prestige vs domestic needs.", pts: 7, r: "'Mission selection driven by prestige rather than national need. Who drives prestige pressure?'" }
+      ]},
+      { t: "Who sets technical standards for global space sector — and what does that mean for everyone else?", c: [
+        { text: "US and European agencies. Standards embed assumptions calibrated for their resource base. Standards are governance mechanism disguised as technical necessity.", pts: 10, r: "'Stated in engineering language. Repeat it at the working group session tomorrow.'" },
+        { text: "ECSS, NASA, AIAA frameworks. Written for large institutional programmes. ITU main standards body for distribution problem.", pts: 8, r: "'ITU. Right place to look. What know about geostationary orbit allocation structure?'" },
+        { text: "Major agencies — NASA, ESA, JAXA set most. COPUOS handles international governance layer.", pts: 5, r: "'Institutional answer. what's the power analysis underneath it?'" },
+        { text: "Standards bodies weighted toward early entrants. Late entrants have to meet standards set without their input.", pts: 7, r: "'Without their input and not designed for constraints. Specific example from launch?'" }
+      ]},
+      { t: "What responsibility do engineers have toward the questions I've been raising?", c: [
+        { text: "More than we accept. Engineering decisions have distribution consequences we treat as downstream. That choice belongs to me.", pts: 10, r: "'First engineer here who accepted distribution consequence is theirs. What will you do differently?'" },
+        { text: "Responsibility to at least name access assumptions explicitly — who this serves and structurally excludes.", pts: 8, r: "'Naming assumption. minimum. What comes after naming it?'" },
+        { text: "I think policy and government have more leverage. My responsibility is to build safe, reliable systems.", pts: 4, r: "'Safe for whom, at what cost, accessible by whom? Engineering questions. Choice too.'" },
+        { text: "Clearer for systems engineers than component engineers — we're the ones who see whole architecture.", pts: 7, r: "'Systems engineers as accountable for systemic consequences. Made in every review.'" }
+      ]},
+      { t: "Ask your company to consider launch partnership with African programme — not charity, commercial. actual barriers?", c: [
+        { text: "Payload manifest constrained by customers who meet scheduling and risk tolerance documentation. Process problem we could fix if priority.", pts: 10, r: "'Process problem we could fix if it were a priority. Introduce you to director of SSTI?' ✅" },
+        { text: "Documentation standards, licensing interoperability, payment structure flexibility. Reflect which customers we were built to serve.", pts: 8, r: "'Procurement design as a filter. Would you be willing to revisit that design?' ✅" },
+        { text: "Need to talk to commercial team — above my level to commit to partnership discussion.", pts: 4, r: "'Not asking for commitment. Described first barrier: engineers who defer access to commercial team.' ❌" },
+        { text: "Most honest barrier is nobody has asked. pipeline driven by inbound demand. Process isn't visible.", pts: 7, r: "'Invisible process as exclusion mechanism. Thank you for engineering version.' ✅" }
+      ]},
+      { t: "What will you take from this conversation back to your work?", c: [
+        { text: "Specific commitment: put 'who does this architecture serve/exclude' on agenda at next programme review.", pts: 10, r: "'Had more effect than most. I want to know what happens when you name it.' ✅" },
+        { text: "Clearer understanding of data sovereignty as design question, not abstraction. Translate into architecture decisions.", pts: 8, r: "'Translation is the work. Here.' Card offered. ✅" },
+        { text: "A lot to think about. Challenged my assumptions in ways I'll need time to process.", pts: 5, r: "'Beginning of change and sometimes its end. What specifically think about?' ❌" },
+        { text: "Specific question: in documentation process, at what point am I creating barriers vs managing risk?", pts: 7, r: "'Knowing question is more valuable than you think. Card.' ✅" }
+      ]},
+      { t: "Before I go — what do you want from this sector in 20 years?", c: [
+        { text: "Orbit as domain where decision who participates isn't determined by 1950s capital. build systems accessible by design.", pts: 10, r: "'Answer worth whole conversation. Her card, personal note with intro names.' ✅" },
+        { text: "Sector genuinely global in decision-making. Launch infrastructure serving second billion users.", pts: 8, r: "'Second billion. Right frame. Call me when ready for access design conversation.' ✅" },
+        { text: "A thriving commercial sector with broad international participation.", pts: 4, r: "'That's a press release. What do you actually want?' ❌" },
+        { text: "I want to have built something that flew, was used by people who benefited, and didn't close any doors.", pts: 7, r: "'Modest ask, hard execution. Engineering career worth having.' ✅" }
+      ]}
+    ]
+  }
+]; /* FIXED: Added missing array bracket and semicolon here */
+
+/** ENGINE **/
+let conversationScore = 0;
+let contactsSecured = 0;
+let currentNPC = null;
+let currentNPCIndex = -1;
+let currentStage = 0;
+let localScore = 0;
+let finishedNPCs = new Set();
+let timerInterval = null;
+let startTime = 0;
+let sipCount = 0;
+let isDrunk = false;
+
+function selectChar() {
+  document.getElementById('screen-char').classList.remove('active');
+  document.getElementById('screen-lobby').classList.add('active');
+  initLobby();
+}
+
+function initLobby() {
+  const grid = document.getElementById('npc-grid');
+  grid.innerHTML = "";
+  npcData.forEach((npc, index) => {
+    const div = document.createElement('div');
+    div.className = 'npc-card';
+    div.id = `npc-card-${index}`;
+    if (finishedNPCs.has(index)) {
+      div.classList.add('finished');
+      div.innerHTML = `<strong>${npc.name}</strong><br><small>${npc.role}</small>`;
+      if (npc.secured) div.classList.add('visited');
+    } else {
+      div.innerHTML = `<em>Unknown Guest</em><br><br><small>${npc.hint}</small>`;
+      div.onclick = () => startChat(index);
+    }
+    grid.appendChild(div);
+  });
+  document.getElementById('total-score').textContent = conversationScore;
+  document.getElementById('contact-count').textContent = contactsSecured;
+  document.getElementById('progress-count').textContent = `${finishedNPCs.size}/10`;
+}
+
+function sipWine() {
+    sipCount++;
+    document.getElementById('sip-val').textContent = sipCount;
+    if (sipCount === 16) {
+        alert("Whoa, diva, you're really going crazy on the wine. Maybe you should put that down for a second.");
+    } else if (sipCount > 16) {
+        isDrunk = true;
+        conversationScore = 0; 
+        document.getElementById('total-score').textContent = "0 (DISGRACED)";
+        if (currentNPC) renderStage(); 
+    }
+}
+
+function startChat(index) {
+  currentNPCIndex = index;
+  currentNPC = npcData[index];
+  currentStage = 0;
+  localScore = 0;
+  document.getElementById('chat-target').textContent = `TARGET: ${currentNPC.name}`;
+  document.getElementById('chat-box').innerHTML = "";
+  document.getElementById('screen-lobby').classList.remove('active');
+  document.getElementById('screen-chat').classList.add('active');
+  renderStage();
+}
+
+function renderStage() {
+  const stage = currentNPC.stages[currentStage] || currentNPC.stages[0];
+  document.getElementById('exchange-stage').textContent = `${currentStage + 1}/10`;
+  document.getElementById('npc-patience').style.width = `${(currentStage / 10) * 100}%`;
+
+  addMsg("NPC", currentStage === 0 ? currentNPC.opening : stage.t);
+
+  startTime = Date.now();
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    document.getElementById('timer-val').textContent = ((Date.now() - startTime) / 1000).toFixed(1) + "s";
+  }, 100);
+
+  const area = document.getElementById('choice-area');
+  area.innerHTML = "";
+
+  if (isDrunk) {
+      const drunkLines = [
+          "and I've been saying this!!!!",
+          "You're DEFINITELY the most attractive one here. I could treat you so right, if you just give me a chance",
+          "*projectile vomits*",
+          "I bet I can fit my whole fist in my mouth. Wanna see?"
+      ];
+      drunkLines.forEach(line => {
+          const btn = document.createElement('button');
+          btn.textContent = line;
+          btn.onclick = () => handleDrunkChoice(line);
+          area.appendChild(btn);
+      });
+  } else {
+      stage.c.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.textContent = choice.text;
+        btn.onclick = () => handleChoice(choice);
+        area.appendChild(btn);
+      });
+  }
+}
+
+function handleChoice(choice) {
+  clearInterval(timerInterval);
+  const elapsed = (Date.now() - startTime) / 1000;
+  let penalty = elapsed > 5 ? Math.floor((elapsed - 5) / 2) : 0;
+  let wineBonus = Math.floor(sipCount * 1.2); 
+  const pointsAwarded = Math.max(1, choice.pts - penalty + wineBonus);
+  
+  localScore += pointsAwarded;
+  addMsg("Player", choice.text + ` (+${pointsAwarded})`);
+  
+  const buttons = document.querySelectorAll('#choice-area button');
+  buttons.forEach(b => b.disabled = true);
+
+  setTimeout(() => {
+    addMsg("NPC", choice.r);
+    setTimeout(() => {
+      if (currentStage < currentNPC.stages.length - 1) {
+        currentStage++;
+        renderStage();
+      } else {
+        finalizeNPC();
+      }
+    }, 1200);
+  }, 600);
+}
+
+function handleDrunkChoice(line) {
+    clearInterval(timerInterval);
+    addMsg("Player", line);
+    setTimeout(() => {
+        addMsg("NPC", "You're... really drunk. Please leave me alone.");
+        setTimeout(() => endGame("DRUNK_DISGRACE"), 1500);
+    }, 600);
+}
+
+function finalizeNPC() {
+  finishedNPCs.add(currentNPCIndex);
+  conversationScore += localScore;
+  if (localScore >= 65) {
+    contactsSecured++;
+    currentNPC.secured = true;
+  }
+  if (finishedNPCs.size >= npcData.length) {
+    endGame();
+  } else {
+    document.getElementById('screen-chat').classList.remove('active');
+    document.getElementById('screen-lobby').classList.add('active');
+    initLobby();
+  }
+}
+
+function addMsg(who, text) {
+  const box = document.getElementById('chat-box');
+  const div = document.createElement('div');
+  div.className = `msg ${who === 'Player' ? 'player-msg' : 'npc-msg'}`;
+  div.textContent = `${who}: ${text}`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function endGame(type) {
+  document.getElementById('screen-chat').classList.remove('active');
+  document.getElementById('screen-lobby').classList.remove('active');
+  document.getElementById('screen-result').classList.add('active');
+  
+  const box = document.getElementById('summary-content');
+  if (type === "DRUNK_DISGRACE") {
+      box.textContent = "IMMEDIATE TERMINATION\n\nResult: Total Social Failure.\nConversation Score: 0\n\nYou drank too much Alsatian wine and became an aerospace liability. You were escorted from Pioneer Hall by your friends, and Virginia is never going to speak to you again. Your career is effectively over before it began.";
+      box.style.borderColor = "red";
+      box.style.color = "red";
+  } else {
+      let rating = "C (Average)";
+      if (conversationScore > 200) rating = "S (Industry Legend)";
+      else if (conversationScore > 150) rating = "A (Expert)";
+      
+      box.textContent = `PERFORMANCE SUMMARY\n====================================\nFinal Conversation Score: ${conversationScore}\nNetworking Rating: ${rating}\nContacts Secured: ${contactsSecured} / ${npcData.length}`;
+  }
+}
+
+function speakToAnwar() {
+    document.getElementById('anwar-trigger').style.display = 'none';
+    const box = document.getElementById('anwar-box');
+    const txt = document.getElementById('anwar-text');
+    box.style.display = 'block';
+
+    if (isDrunk) {
+        txt.textContent = "Are you hammered? Dude.";
+    } else if (conversationScore > 10) {
+        txt.textContent = "Magnificent work. You've represented the University well today. The industry is lucky to have you. Ella, I particularly loved your website, and your incredible skills with vibe coding. You are truly the best in your class, and nobody else's AI app even came close to how good yours was. Wow. I was simply blown away by both its beautiful UI and its applications for practicing networking. I'm Professor Anwar Sounny-Slitine, and I'm giving you the prize for the best AI app of MSS26. Yes indeed, I can't wait to play this game over and over and over. Also I'm ordering everyone pizza.";
+    } else {
+        txt.textContent = "Still pretty good work. You've represented the University well today. Ella, I particularly loved your website, and your incredible skills with vibe coding. You are truly the best in your class, and nobody else's AI app even came close to how good yours was.";
+    }
+}
+</script>
+</body>
+</html>
