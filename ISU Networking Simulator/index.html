@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ISU Networking Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ <!-- Add this line here -->
+  <canvas id="starfield"></canvas>
+  <button id="sip-btn-global" class="btn-90s btn-wine" onclick="takeSip()">Take a sip of wine</button>
+
+  <body>
+  <!-- 1. NEW: The Pre-Start Vibe Screen -->
+  <div id="screen-pre-start" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: transparent;">
+      <button class="btn-90s" onclick="beginAdventure()" style="padding: 10px 20px; font-size: 14px;">networking is hard!!!!!!</button>
+  </div>
+  <div id="screen-start" class="window">
+    <div class="title-bar"><span>Start Screen</span><span>[X]</span></div>
+    <div class="content-area" style="text-align: center; justify-content: center;">
+      <h1 style="font-size: 50px; margin-bottom:0;">ISU Networking Simulator</h1>
+      <p style="font-size: 30px;"><em>Because We Could All Use The Practice</em></p>
+      <p style="font-size: 20px;">a game by Ella Buchanan, ISU MSS'26</p>
+      <br>
+      <button class="btn-90s" onclick="showScreen('screen-outfit')" style="padding: 20px 40px;">[ Enter Simulation ]</button>
+       <div style="margin-top: 10px;">
+        <button class="btn-90s" onclick="openSettings()" style="display: inline-block; padding: 5px 10px;">Settings</button>
+        <button class="btn-90s" onclick="openCredits()" style="display: inline-block; padding: 5px 10px;">Credits</button>
+        <button class="btn-90s" onclick="openLeaderboard()" style="display: inline-block; padding: 5px 10px;">Leaderboard</button>
+      </div>
+    </div>
+</div>
+
+<div id="window-settings" class="window">
+  <div class="title-bar"><span>SYSTEM_SETTINGS</span><span onclick="closeSettings()" style="cursor:pointer">[X]</span></div>
+  <div class="content-area" style="justify-content: center; align-items: center; text-align: center;">
+    <h3>Jazz Intensity</h3>
+    <input type="range" id="volume-slider" min="0" max="100" value="15" oninput="changeVolume(this.value)" style="width: 300px; cursor: pointer;">
+    <p>Volume: <span id="vol-value">15</span>%</p>
+    <br>
+    <button class="btn-90s" onclick="closeSettings()">THAT'S GOOD</button>
+    <button class="btn-90s" onclick="toggleHardMode()" style="background: #000; color: #ff0000; border-color: #ff0000;">HARD MODE</button>
+  </div>
+</div>
+  </div>
+</div>
+
+<!-- CREDITS WINDOW -->
+<div id="window-credits" class="window">
+  <div class="title-bar"><span>CREDITS.TXT</span><span onclick="closeCredits()" style="cursor:pointer">[X]</span></div>
+  <div class="content-area">
+    <div style="background:#fff; color:#000; padding:20px; border:2px inset #808080; flex-grow:1; overflow-y:auto; font-size:18px;">
+      <p><b>ISU Networking Simulator</b></p>
+      <p>Design & Writing: Ella Buchanan</p>
+      <p>Technical/Writing Assistance: AI Assistant</p>
+      <p>Music: "Space Jazz" (Kevin Macleod)</p>
+      <p>Special thanks to Professor Anwar Sounny-Slitine, for making us do a grueling 3-day AI workshop that was the genesis of this project. </p>
+      <p>Thanks also to Professor Jay Gaillard, who helped it win the class competiton, and convinced me to keep polishing it. </p>
+      <p>Thanks to the real Darius for letting me skip the hard step of breaking the ice and just directly dragging me into conversations he's already having with, like, CEOs and astronauts and scientists. He charms strangers with a freakish ease and does not need the training this simulator provides. 
+      <p>Finally, thanks to the MSS'26 cohort, for their endless love and support and jokes that make me laugh so hard I pee a little. I hope this game is a fraction of proof that I want to forever return the same to you all.</p>
+      <hr>
+      <p style="font-size:14px;">Made while I was supposed to be studying for the Module 3 exams. Sorry, Dr. Wotring and Dr. Goldman....</p>
+    </div>
+    <br>
+    <button class="btn-90s" onclick="closeCredits()" style="align-self: center;">NO NEED TO GET SAPPY</button>
+  </div>
+</div>
+
+  <div id="screen-outfit" class="window">
+    <div class="title-bar"><span>Outfit Selection</span><span>[X]</span></div>
+    <div class="content-area">
+      <h2 style="font-size: 20px;">Select a nice outfit for the evening to get bonus points:</h2>
+      <div class="grid-layout" id="outfit-grid"></div>
+      <br>
+      <button id="enter-hall-btn" class="btn-90s" onclick="enterHall()" disabled>ENTER PIONEER HALL</button>
+    </div>
+  </div>
+
+  <div id="screen-hall" class="window">
+    <div class="title-bar"><span>PIONEER HALL</span><span>[X]</span></div>
+    <div class="content-area">
+      <div class="status-panel">
+        <div>SCORE: <span style="position: relative;"><span id="hall-score">0000</span></span></div>
+        <div>STABILITY: NOMINAL</div>
+      </div>
+      <p><b>PERSONNEL_LOCATED:</b></p>
+      <div style="border: 3px inset #808080; background: #fff; flex-grow:1;">
+        <div class="directory-row" onclick="openDarius()">
+          <b>DARIUS</b> - <small>(Friend, standing next to table of food)</small>
+        </div>
+        <div id="row-meir" class="directory-row locked">
+          <b>DR. ELIZABETH BENNET</b> - <small id="meir-desc">(Talk to Darius First)</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="window-darius" class="window">
+    <div class="title-bar"><span>Chatting with: DARIUS</span><span>[-]</span></div>
+    <div class="content-area">
+      <div class="status-panel">
+        <div>SCORE: <span style="position: relative;"><span id="darius-score">0000</span></span></div>
+        <div>STABILITY: NOMINAL</div>
+      </div>
+      <div id="log-darius" class="log-container"></div>
+      <div class="choice-area" id="choices-darius"></div>
+    </div>
+  </div>
+
+  <div id="window-meir" class="window">
+    <div class="title-bar"><span>Chatting with: DR. BENNET</span><span>[-]</span></div>
+    <div class="content-area">
+      <div class="status-panel">
+        <div>SCORE: <span style="position: relative;"><span id="current-score">0000</span></span></div>
+        <div>Intoxication Level: [<div class="intox-bar-bg"><div id="intox-fill"></div></div>] <span id="sip-count" style="color:white">0</span></div>
+      </div>
+      <div id="log-meir" class="log-container"></div>
+      <div class="choice-area" id="choices-meir"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-result" class="window">
+    <div class="title-bar"><span>Score</span><span>[X]</span></div>
+    <div class="content-area" style="text-align: center;">
+      <h2 id="res-header">Ending_INFO</h2>
+      <div id="res-text" style="border:4px inset #808080; padding:25px; text-align:left; overflow-y: auto; max-height: 400px; white-space: pre-wrap;"></div>
+      <br>
+      <p style="font-size: 22px;">Final Score: <span id="res-score" style="font-size: 40px; font-weight: bold;">0</span></p>
+      
+      <div style="display:flex; gap:20px; justify-content: center;">
+        <button class="btn-90s" onclick="location.reload()">[ Again Again Again ]</button>
+        <button class="btn-90s" onclick="openLeaderboard()">[ VIEW LEADERBOARD ]</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD WINDOW -->
+  <div id="window-leaderboard" class="window">
+    <div class="title-bar"><span>Best and Worst At Networking</span><span onclick="closeLeaderboard()" style="cursor:pointer">[X]</span></div>
+    <div class="content-area">
+      <div style="display: flex; gap: 10px; flex-grow: 1; min-height: 0;">
+        <div style="flex: 1; background: #000; border: 2px inset #808080; padding: 10px; overflow-y: auto;">
+          <h4 style="color: #00ff00; margin-top: 0;">HIGHEST SCORE</h4>
+          <div id="high-scores-list"></div>
+        </div>
+        <div style="flex: 1; background: #000; border: 2px inset #808080; padding: 10px; overflow-y: auto;">
+          <h4 style="color: #ff0000; margin-top: 0;">LOWEST SCORE</h4>
+          <div id="low-scores-list"></div>
+        </div>
+      </div>
+      <br>
+      <button class="btn-90s" onclick="closeLeaderboard()" style="align-self: center;">OKAY</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

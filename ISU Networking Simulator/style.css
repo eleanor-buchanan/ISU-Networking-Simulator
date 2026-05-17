@@ -1,0 +1,307 @@
+:root {
+  --isu-blue: #00205b;
+  --isu-light: #005596;
+  --retro-gray: #c0c0c0;
+  --retro-border-light: #ffffff;
+  --retro-border-dark: #808080;
+  --terminal-green: #00ff00;
+  --win-blue: #000080;
+}
+
+body {
+  background-color: #000;
+  font-family: 'Courier New', Courier, monospace;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Puts it behind everything */
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+}
+
+.window {
+  width: 1400px;
+  height: 850px;
+  background: var(--retro-gray);
+  border: 4px outset var(--retro-border-light);
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  box-shadow: 15px 15px 0px rgba(0,0,0,0.7);
+}
+
+.active { display: flex; z-index: 10; }
+
+.title-bar {
+  background: linear-gradient(90deg, var(--isu-blue), var(--isu-light));
+  color: white;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.content-area { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* UPDATED: Main Dialogue Box */
+.log-container {
+  background: #00205b;
+  border: 4px inset var(--retro-border-dark);
+  height: 450px;
+  padding: 20px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  line-height: 1.6; /* More breathability for text */
+  overflow-y: auto;
+  color: #fff;
+  font-weight: normal;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-entry { margin-bottom: 60px; }
+
+/* Colors that pop against black background */
+.log-npc { color: #79e2e2; font-weight: 900; } /* Bright Cyan */
+.log-user { color: #64d764; font-weight: 900; } /* Bright Green */
+
+.log-narrative {
+  background: #1a1a1a; /* Darker gray background */
+  border: 2px inset #444;
+  padding: 12px;
+  margin: 20px 0 60px 0;
+  font-style: italic;
+  color: #e18487; /* Light red for stage directions */
+  text-align: left;
+  font-weight: bold;
+  font-size: 20px;
+  white-space: pre-wrap;
+}
+
+
+.status-panel {
+  background: #00205b;
+  color: var(--terminal-green);
+  padding: 10px 15px;
+  border: 3px inset var(--retro-border-dark);
+  margin-bottom: 10px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.choice-area { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 12px; 
+  min-height: 140px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.btn-90s {
+  background: var(--retro-gray);
+  border: 3px outset var(--retro-border-light);
+  padding: 12px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.btn-90s:active { border: 3px inset #000; background: #a0a0a0; }
+
+.btn-wine {
+  background: #800020;
+  color: #fff;
+  border: 3px outset #ff0000;
+  padding: 10px 20px;
+  visibility: hidden;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
+}
+
+.intox-bar-bg { width: 150px; height: 16px; background: #333; border: 2px solid #555; display: inline-block; vertical-align: middle; }
+#intox-fill { height: 100%; width: 0%; background: var(--terminal-green); transition: width 0.4s; }
+
+/* Optimized for long outfit descriptions */
+.grid-layout { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); /* 2 columns for more text room */
+  gap: 15px; 
+  background: #fff; 
+  padding: 15px; 
+  border: 3px inset #808080; 
+  max-height: 500px; /* Prevents window from getting too tall */
+  overflow-y: auto;   /* Adds a scrollbar if the list is long */
+}
+
+.grid-item { 
+  background: var(--retro-gray); 
+  border: 2px outset #fff; 
+  padding: 15px; 
+  text-align: center; 
+  cursor: pointer; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+/* Specific styling for the text inside the grid items */
+.outfit-desc {
+  font-size: 20px;
+  color: var(--isu-blue);
+  line-height: 1.3;
+  margin-bottom: 10px;
+  font-family: 'Courier New', monospace; 
+}
+
+
+
+.grid-item.selected { 
+  background: var(--win-blue); 
+  border: 2px inset #000; 
+}
+
+/* Ensure text stays visible when the box turns blue */
+.grid-item.selected .outfit-desc,
+.grid-item.selected .outfit-pts {
+  color: white;
+}
+
+.directory-row { background: #fff; border-bottom: 2px solid #ccc; padding: 20px; cursor: pointer; font-size: 20px; }
+.directory-row:hover { background: var(--isu-light); color: white; }
+.directory-row.locked { opacity: 0.4; cursor: not-allowed; background: #eee; }
+
+/* This targets the text area in the Results Screen */
+/* UPDATED: Results Screen Box */
+#res-text {
+  background: #00205b; 
+  color: #fff;      /* White text */
+  border: 4px inset var(--retro-border-dark);
+  padding: 25px;
+  font-size: 24px;  /* Even larger for the ending */
+  text-align: left;
+  overflow-y: auto;
+  max-height: 450px;
+  white-space: pre-wrap;
+  font-weight: normal;
+}
+
+/* Optional: If you want stage directions (expo) to also have breaks */
+.log-narrative {
+  white-space: pre-wrap;
+}
+#screen-pre-start {
+  transition: opacity 1s ease-in-out;
+}
+
+/* Make the button look a bit more isolated and 'small' */
+#screen-pre-start .btn-90s {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    border-radius: 0; /* Keep it 90s blocky */
+}
+/* Make the score numbers larger and brighter */
+#hall-score, #current-score, #darius-score {
+  font-size: 40px; /* Increased size */
+  font-weight: 900;
+  color: #fff;
+}
+
+/* The style for the floating point indicator */
+.point-popup {
+  position: absolute;
+  left: 100%;       /* Appears to the right of the score */
+  margin-left: 10px;
+  font-weight: 900;
+  font-size: 28px;
+  pointer-events: none;
+  animation: floatUpAndFade 2s forwards;
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+/* Styling for the retro slider */
+input[type=range] {
+  appearance: none;
+  background: var(--retro-border-dark);
+  height: 10px;
+  border: 2px inset white;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 30px;
+  background: var(--retro-gray);
+  border: 2px outset white;
+  cursor: pointer;
+}
+
+/* Ensure these windows are centered when they appear */
+#window-settings, #window-credits {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; /* Smaller than main windows */
+    height: 400px;
+}
+
+#hard-mode-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999; /* Sit on top of everything */
+  pointer-events: none; /* Let clicks pass through to buttons */
+  display: none; /* Hidden by default */
+  
+  /* Create the spotlight effect */
+  background: radial-gradient(
+    circle 150px at center, 
+    transparent 0%, 
+    rgba(0, 0, 0, 0.98) 100%
+  );
+}
+#window-leaderboard {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 850px;
+    height: 600px;
+}
+
+.score-entry {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #222;
+    font-family: 'Courier New', monospace;
+    line-height: 1.2;
+}
+
+.score-val {
+    color: #00ff00;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#high-scores-list, #low-scores-list {
+    margin-top: 10px;
+}
