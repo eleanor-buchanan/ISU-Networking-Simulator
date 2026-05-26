@@ -1,10 +1,10 @@
 {
   "prologue": {
     "DariusStart": {
-      "text": "Hey. Nice outfit. Did you remember this was going to happen today?",
+      "text": "Hey... Nice outfit.",
       "choices": [
         {
-          "text": "Thanks! Yeah, I had it in my closet and I though it would be perfect for this event.",
+          "text": "Thanks! Yeah, I thought it would be perfect for this.",
           "next": "Darius1"
         },
         {
@@ -14,6 +14,24 @@
         {
           "text": "I am SO tired, bro. Do not start with me.",
           "next": "Darius3"
+        },
+        {
+          "text": "Yes, yes - can't talk. Gotta go introduce myself to the astronaut.",
+          "next": "Darius15"
+        }
+      ]
+    },
+      "Darius15": {
+      "text": "I - whoa. Ok. Good luck then. Make sure to leave some internships for the rest of us.",
+      "choices": [
+        {
+          "text": "Actually wait, no. My hubris got to me. I need help. Help me, Darius.",
+          "next": "Darius6"
+        },
+        {
+          "text": "No promises. Adieu, my slime.",
+          "getWine": true,
+          "next": "UNLOCK_BENNET"
         }
       ]
     },
@@ -30,38 +48,38 @@
       "text": "Are you nervous about meeting the astronaut?",
       "choices": [
         {
-          "text": "I feel like I\u2019m about to shit my pants.",
+          "text": "I feel like I'm about to shit my pants.",
           "next": "Darius4"
         },
         {
-          "text": "I\u2019m so ready. I\u2019ve been waiting for this all day.",
+          "text": "I'm so ready. I've been waiting for this all day.",
           "next": "Darius5"
         },
         {
-          "text": "I dunno\u2026 I\u2019m kind of exhausted. I don\u2019t know if I can, like, hold a conversation right now.",
+          "text": "I dunno... I'm kind of exhausted. I don't know if I can, like, hold a conversation right now.",
           "next": "Darius6"
         }
       ]
     },
     "Darius3": {
-      "text": "Fair enough. Lucky for you, I\u2019ve already talked to the astronaut. She\u2019s chill. Her name\u2019s Dr. Elizabeth Bennet, and she\u2019s been off the ISS for like a year now. Apparently she has some really good contacts at NASA and at some private companies too. You should definitely try to ask her about some opportunities.",
+      "text": "Fair enough. Lucky for you, I've already talked to the astronaut. She's chill. Her name's Dr. Elizabeth Bennet, and she's been off the ISS for like a year now. Apparently she has some really good contacts at NASA and at some private companies too. You should definitely try to ask her about some opportunities.",
       "choices": [
         {
-          "text": "I feel like I\u2019m about to shit my pants.",
+          "text": "I feel like I'm about to shit my pants.",
           "next": "Darius4"
         },
         {
-          "text": "I\u2019m so ready. I\u2019ve been waiting for this all day.",
+          "text": "I'm so ready. I've been waiting for this all day.",
           "next": "Darius5"
         },
         {
-          "text": "I dunno\u2026 I\u2019m kind of exhausted. I don\u2019t know if I can, like, hold a conversation right now.",
+          "text": "I dunno... I'm kind of exhausted. I don't know if I can, like, hold a conversation right now.",
           "next": "Darius6"
         }
       ]
     },
     "Darius4": {
-      "text": "Don\u2019t shit your pants. Hold the shit in. You\u2019ll be fine. Here, they have cheese and wine, if you want some. The snacks might help you lock in, but the wine will DEFINITELY help you with being a smooth talker. To an extent. I mean, you can get wasted if you want, but if you\u2019re looking for an internship you probably don\u2019t want to be belligerent.",
+      "text": "Don't shit your pants. Hold the shit in. You'll be fine. Here. They have cheese and wine, if you want some. Just don't get wasted.",
       "choices": [
         {
           "text": "*Accept wine and snacks*",
@@ -69,17 +87,13 @@
           "getWine": true
         },
         {
-          "text": "*Accept snacks*",
-          "next": "Darius8"
-        },
-        {
-          "text": "No thanks. I don\u2019t need to eat.",
+          "text": "No thanks. I don't need to eat.",
           "next": "Darius9"
         }
       ]
     },
     "Darius5": {
-      "text": "Yeah, see? You\u2019ll be fine. Here. They have cheese and wine, if you want some. The snacks might help you lock in, since there\u2019s a 90% chance you didn\u2019t eat anything today, but the wine will DEFINITELY help you with being a smooth talker. To an extent. I mean, you can get wasted if you want, but if you\u2019re looking for an internship you probably don\u2019t want to be, like, belligerent.",
+      "text": "Yeah, see? You'll be fine. Here. Here. They have cheese and wine, if you want some. Just don't get wasted.",
       "choices": [
         {
           "text": "*Accept glass of wine and snacks*",
@@ -87,17 +101,13 @@
           "getWine": true
         },
         {
-          "text": "*Accept snacks*",
-          "next": "Darius8"
-        },
-        {
-          "text": "No thanks. I don\u2019t need to eat.",
+          "text": "No thanks. I don't need to eat.",
           "next": "Darius9"
         }
       ]
     },
     "Darius6": {
-      "text": "Just breathe. You\u2019ll be fine. You have so many good options for things to say; it\u2019s not like there\u2019s black and white, wrong or right options. Most of the things you can say are good. Here. They have cheese and wine, if you want some. The snacks might help you lock in, since there\u2019s a 90% chance you didn\u2019t eat anything today, but the wine will DEFINITELY help you with being a smooth talker. To an extent. I mean, you can get wasted if you want, but if you\u2019re looking for an internship you probably don\u2019t want to be, like, belligerent.",
+      "text": "Just breathe. You'll be fine. You have so many good options for things to say; it's not like there's black and white, wrong or right options. Just say what feels right. Here. They have cheese and wine, if you want some. Just don't get wasted.",
       "choices": [
         {
           "text": "*Accept glass of wine and snacks*",
@@ -105,63 +115,46 @@
           "getWine": true
         },
         {
-          "text": "*Accept snacks*",
-          "next": "Darius8"
-        },
-        {
-          "text": "No thanks. I don\u2019t need to eat.",
+          "text": "No thanks.",
           "next": "Darius9"
         }
       ]
     },
     "Darius7": {
-      "text": "Ok. Just don\u2019t go crazy. She looks like she\u2019s kind of in a larger conversation right now; I\u2019d wait for her to be a little less occupied with other people. Then you can go in and start to make conversation.",
+      "text": "Good. Ok. Again - aim for TASTEFULLY intoxicated, like maybe somewhere around 10-20 sips, but don't get sloppy.",
       "choices": [
         {
-          "text": "... No, man, I can\u2019t do this right now. I'm missing the optimal time to rewatch the first 10 epsisodes of How I Met Your Mother. I\u2019ll see you guys tomorrow.",
+          "text": "... No, man, I can't do this right now. I'm missing the optimal time to rewatch the first 10 episodes of How I Met Your Mother. I'll see you guys tomorrow.",
           "next": "Darius10"
         },
         {
-          "text": "Ok. I\u2019m ready.",
-          "next": "Darius11"
-        }
-      ]
-    },
-    "Darius8": {
-      "text": "Good. She looks like she\u2019s kind of in a larger conversation right now; I\u2019d wait for her to be a little less occupied with other people. Then you can go in and start to make conversation.",
-      "choices": [
-        {
-          "text": "... No, man, I can\u2019t do this right now. I'm missing the optimal time to rewatch the first 10 epsisodes of How I Met Your Mother. I\u2019ll see you guys tomorrow.",
-          "next": "Darius10"
-        },
-        {
-          "text": "Ok. I\u2019m ready.",
+          "text": "Ok. I'm ready.",
           "next": "Darius11"
         }
       ]
     },
     "Darius9": {
-      "text": "I\u2026 okay, but that\u2019s a bad idea. You should really eat something when you go home. Anyway, she looks like she\u2019s kind of in a larger conversation right now; I\u2019d wait for her to be a little less occupied with other people. Then you can go in and start to make conversation.",
+      "text": "Your loss. This gouda is so good-a, haha, get it? Get it? Get it? Get it? Wordplay! Anyway, go get em' champ. You'll be great.",
       "choices": [
         {
-          "text": "... No, man, I can\u2019t do this right now. I'm missing the optimal time to rewatch the first 10 epsisodes of How I Met Your Mother. I\u2019ll see you guys tomorrow.",
+          "text": "... No, man, I can't do this right now. I'm missing the optimal time to rewatch the first 10 episodes of How I Met Your Mother. I'll see you guys tomorrow.",
           "next": "Darius10"
         },
         {
-          "text": "Ok. I\u2019m ready.",
+          "text": "Ok. I'm ready.",
           "next": "Darius11"
         }
       ]
     },
     "Darius10": {
-      "text": "Come on, man, you can do it. Dr. Bennet has contacts in, like, every possible part of the space industry. You HAVE to talk to her. Even if you\u2019re really terrible at talking, at least she\u2019ll have your name.",
+      "text": "Come on, man, you can do it. Dr. Bennet has contacts in, like, every possible part of the space industry. You HAVE to talk to her. Even if you're really terrible at talking, at least she'll have your name.",
       "choices": [
         {
-          "text": "...Ugh\u2026 ok\u2026 you\u2019re right\u2026",
+          "text": "...Ugh... ok... you're right...",
           "next": "Darius11"
         },
         {
-          "text": "Nope. I\u2019m out of here. Later, virgins.",
+          "text": "Nope. I'm out of here. Later, virgins.",
           "next": "Ending1"
         }
       ]
@@ -186,7 +179,7 @@
     },
     "jess": {
       "Start": {
-        "text": "You look to the middle of the room; Dr. Bennet is surrounded by people. It'll be difficult to break in to the circle. You can't hear much from their conversation, but it seems like she's in the middle of an anecdote.",
+        "text": "You look to the middle of the room; Dr. Bennet is surrounded by about three people.",
         "choices": [
           {
             "text": "Keep looking at your phone for a little bit",
@@ -240,17 +233,12 @@
         "choices": [
           {
             "text": "Attempt to draw attention to yourself by attentively listening and nodding, to indicate that you're knowledgeable about this specific thing, but don't say anything",
-            "next": "Jess34",
+            "next": "Jess101",
             "pts": 3
           },
           {
-            "text": "Excuse me. Sorry to interrupt; my name is ___.",
-            "next": "Jess18",
-            "pts": -4
-          },
-          {
-            "text": "\"Oh! I know about that!\"",
-            "next": "Jess34",
+            "text": "\"Oh! Hey! Ooh!\"",
+            "next": "Jess101",
             "pts": 1,
             "isDrunk": true
           },
@@ -332,11 +320,6 @@
             "text": "\"Oh. Is he still going to come join us for some cheese and wine?\"",
             "next": "Jess15",
             "pts": 3
-          },
-          {
-            "text": "\"Hello Dr. Bennet. My name is ____. It's a pleasure to meet you.\"",
-            "next": "Jess16",
-            "pts": 1
           }
         ]
       },
@@ -390,9 +373,9 @@
             "pts": 5
           },
           {
-            "text": "\"I'm ___, by the way. Nice to meet you.\"",
-            "next": "Jess16",
-            "pts": 2
+            "text": "Panic, and go get Darius to help you",
+            "next": "DariusTime",
+            "pts": -10
           },
           {
             "text": "\"I will.\"",
@@ -809,12 +792,12 @@
             "pts": 1
           },
           {
-            "text": "\"I\u2019ve been focusing mostly on propulsion. I can send you my LinkedIn if you want to see some of the projects I\u2019ve been involved with.\"",
+            "text": "\"I've been focusing mostly on propulsion. I can send you my LinkedIn if you want to see some of the projects I've been involved with.\"",
             "next": "Jess67",
             "pts": 5
           },
           {
-            "text": "\"I\u2019m leaning toward propulsion at the moment. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
+            "text": "\"I'm leaning toward propulsion at the moment. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
             "next": "Jess65",
             "pts": 10
           },
@@ -824,7 +807,7 @@
             "pts": -4
           },
           {
-            "text": "\"BRO GNC PEOPLE SCARE ME. Those creeps will be like \u2018oh yeah the vehicle was only off by 0.02 degrees\u2019 like ok bro, go huff some soldering fumes. You know?\"",
+            "text": "\"BRO GNC PEOPLE SCARE ME. Those creeps will be like 'oh yeah the vehicle was only off by 0.02 degrees' like ok bro, go huff some soldering fumes. You know?\"",
             "next": "DrunkJess33",
             "pts": -8,
             "isDrunk": true
@@ -841,17 +824,17 @@
         "text": "\"Oh, this is such an underrated one. I'm glad they pull you guys into the ISU crowd. Human factors, crew dynamics, isolation... I lived some of that firsthand and I can tell you, the psychological side of long-duration missions is a real and serious challenge. Are you thinking research, or clinical?\"",
         "choices": [
           {
-            "text": "\"Probably research. I\u2019m interested in crew dynamics, although half the time I can barely manage team dynamics during group projects.\"",
+            "text": "\"Probably research. I'm interested in crew dynamics, although half the time I can barely manage team dynamics during group projects.\"",
             "next": "Jess64",
             "pts": -4
           },
           {
-            "text": "\"I\u2019m leaning toward the research side right now. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
+            "text": "\"I'm leaning toward the research side right now. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
             "next": "Jess65",
             "pts": 8
           },
           {
-            "text": "\"Research, probably. It\u2019s wild how people act like psychology isn't important until locking six exhausted people in a metal tube starts going badly. NASA doesn't know how to take psychology seriously.\"",
+            "text": "\"Research, probably. It's wild how people act like psychology isn't important until locking six exhausted people in a metal tube starts going badly. NASA doesn't know how to take psychology seriously.\"",
             "next": "Jess66",
             "pts": -4
           },
@@ -873,17 +856,17 @@
         "text": "\"Medicine is huge for human spaceflight right now. Bone density, SANS, radiation exposure... and having medical capability onboard becomes critical, too, NASA is definitely looking into that. Do you see yourself on the research side or more clinical and operational?\"",
         "choices": [
           {
-            "text": "\"Probably research, honestly; I\u2019m still figuring things out, and I trust myself a lot more with data than with keeping astronauts alive in a crisis.\"",
+            "text": "\"Probably research, honestly; I'm still figuring things out, and I trust myself a lot more with data than with keeping astronauts alive in a crisis.\"",
             "next": "Jess64",
             "pts": -2
           },
           {
-            "text": "\"I\u2019m leaning toward the research side right now, especially around long-duration mission health. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
+            "text": "\"I'm leaning toward the research side right now, especially around long-duration mission health. If you worked with anyone in particular who you thought was cool, I'd love to get their take on my career path.\"",
             "next": "Jess65",
             "pts": 7
           },
           {
-            "text": "\u201cResearch, probably. Clinical sounds great until you remember you have to actually practice medicine on regular people, too. I only care about the interesting patients.\u201d",
+            "text": "“Research, probably. Clinical sounds great until you remember you have to actually practice medicine on regular people, too. I only care about the interesting patients.”",
             "next": "Jess66",
             "pts": -4
           },
@@ -899,34 +882,34 @@
         "text": "\"Oh, cool. Are you the rocks kind of planetary science or the weather kind of planetary science?\"",
         "choices": [
           {
-            "text": "\u201cWeather. I\u2019m trying to figure out what to do with it, though - If you know anyone in the field, I\u2019d love to get their number so I can see what they did for their career path.\u201d",
+            "text": "“Weather. I'm trying to figure out what to do with it, though - If you know anyone in the field, I'd love to get their number so I can see what they did for their career path.”",
             "next": "Jess65",
             "pts": 7
           },
           {
-            "text": "\u201cRocks. I\u2019m trying to figure out what to do with it, though - If you know anyone in the field, I\u2019d love to get their number so I can see what they did for their career path.\u201d",
+            "text": "“Rocks. I'm trying to figure out what to do with it, though - If you know anyone in the field, I'd love to get their number so I can see what they did for their career path.”",
             "next": "Jess65",
             "pts": 7
           },
           {
-            "text": "\u201cWeather. Do you think that anyone does that anymore? I dunno.\u201d",
+            "text": "“Weather. Do you think that anyone does that anymore? I dunno.”",
             "next": "Jess64",
             "pts": 3
           },
           {
-            "text": "\u201cRocks. I know, it\u2019s not rocket science, but I really love it.\u201d",
+            "text": "“Rocks. I know, it's not rocket science, but I really love it.”",
             "next": "Jess64",
             "pts": 3
           },
           {
-            "text": "\u201cNeither. Volcanoes.\u201d",
+            "text": "“Neither. Volcanoes.”",
             "next": "Jess68",
             "pts": 6
           }
         ]
       },
       "Jess29": {
-        "text": "\u201cOh, neat - I haven\u2019t met an astronomer yet tonight. That\u2019s so cool. What wavelength do you operate in?\u201d",
+        "text": "“Oh, neat - I haven't met an astronomer yet tonight. That's so cool. What wavelength do you operate in?”",
         "choices": [
           {
             "text": "\"Mostly radio astronomy, but I've only done a little bit of it, so I wouldn't say I 'operate in' anything yet.\"",
@@ -939,17 +922,17 @@
             "pts": 5
           },
           {
-            "text": "\u201cRadio! I\u2019m looking WAY out there. I\u2019m hoping to maybe chat with some people about doing research in that area, to chat with them about their career and see how I should go about mine.\u201d",
+            "text": "“Radio! I'm looking WAY out there. I'm hoping to maybe chat with some people about doing research in that area, to chat with them about their career and see how I should go about mine.”",
             "next": "Jess65",
             "pts": 6
           },
           {
-            "text": "\"I\u2019m doing research in optical astronomy at the moment. I can send you my LinkedIn if you want to see some of the projects I\u2019ve worked on.\"",
+            "text": "\"I'm doing research in optical astronomy at the moment. I can send you my LinkedIn if you want to see some of the projects I've worked on.\"",
             "next": "Jess67",
             "pts": 6
           },
           {
-            "text": "\u201cRadio astronomy. Somebody has to work on the stuff that doesn\u2019t just make pretty telescope pictures for Instagram.\u201d",
+            "text": "“Radio astronomy. Somebody has to work on the stuff that doesn't just make pretty telescope pictures for Instagram.”",
             "next": "Jess66",
             "pts": -6
           },
@@ -980,12 +963,12 @@
             "pts": -15
           },
           {
-            "text": "\"Yeah, turns out some people don\u2019t emerge from the womb with a perfectly optimized five-year aerospace career plan. Unlike some others here.\" *roll your eyes*",
+            "text": "\"Yeah, turns out some people don't emerge from the womb with a perfectly optimized five-year aerospace career plan. Unlike some others here.\" *roll your eyes*",
             "next": "Jess66",
             "pts": -10
           },
           {
-            "text": "\"WAIT okay that actually makes me feel SO much better, because I swear everyone here sounds like they\u2019ve been building satellites since they were nine. Literally fucked.\"",
+            "text": "\"WAIT okay that actually makes me feel SO much better, because I swear everyone here sounds like they've been building satellites since they were nine. Literally fucked.\"",
             "next": "Jess64",
             "pts": -10,
             "isDrunk": true
@@ -1067,7 +1050,7 @@
         ]
       },
       "Jess34": {
-        "text": "She looks at you. \"Oh, are you familiar with the topic?\"",
+        "text": "She looks at you. \"So I'd say you're pretty familiar with the topic, huh?\"",
         "choices": [
           {
             "text": "\"I'm so nervous to meet you. Sorry for just barging into the conversation.\"",
@@ -1075,7 +1058,7 @@
             "pts": -2
           },
           {
-            "text": "\"Yeah, I did a bunch of work on that stuff right before coming to ISU. What's your experience with it?\"",
+            "text": "\"Yeah, what's your experience with it? I missed your backstory.\"",
             "next": "Jess36",
             "pts": 7
           },
@@ -1084,6 +1067,38 @@
             "next": "DrunkJess3",
             "pts": -4,
             "isDrunk": true
+          }
+        ]
+      },
+      "Jess101": {
+        "text": "\"Seems like you might know something about this?\" She turns to look at you.",
+        "choices": [
+          {
+            "text": "\"No, not really. Actually yes. Haha. Keeping you on your toes, huh?\"",
+            "next": "Jess34",
+            "pts": -2
+          },
+          {
+            "text": "\"Yeah, I did some stuff on that before coming to ISU, for a different school project. It was pretty fun.\"",
+            "next": "Jess34",
+            "pts": 7
+          },
+          {
+            "text": "\"Yeah, that's like, my favorite thing to talk about! I did a WHOLE project on it, it was so fun.\"",
+            "next": "Jess34",
+            "pts": 2,
+            "isDrunk": true
+          },
+          {
+            "text": "\"...Internship?\"",
+            "next": "DrunkJess3",
+            "pts": -4,
+            "isDrunk": true
+          },
+          {
+            "text": "Go away and ask Darius for help",
+            "next": "DariusTime",
+            "pts": -10
           }
         ]
       },
@@ -1185,11 +1200,6 @@
             "pts": -2
           },
           {
-            "text": "\"Argh, sorry I'm being so awkward.\"",
-            "next": "Jess39",
-            "pts": -8
-          },
-          {
             "text": "\"Welp. Good talk. See you later, alligator.\"",
             "next": "Lost Momentum Ending",
             "pts": -2
@@ -1269,7 +1279,7 @@
             "isDrunk": true
           },
           {
-            "text": "\"Sorry, I just got distracted by your winning smile.\"",
+            "text": "\"Sorry, i just got distracted by your winning smile.\"",
             "next": "DrunkJess4",
             "pts": -8,
             "isDrunk": true
@@ -1301,7 +1311,7 @@
             "pts": 5
           },
           {
-            "text": "\"I mean, I am a HUGE fan. I think we all are. You've done so many things in space, and I LOVE space! Everyone at this school loves space. Isn't that cool?\"",
+            "text": "\"I mean, i am a HUGE fan. I think we all are. You've done so many things in space, and I LOVE space! Everyone at this school loves space. Isn't that cool?\"",
             "next": "Jess17",
             "pts": 5,
             "isDrunk": true
@@ -1536,7 +1546,7 @@
             "isDrunk": true
           },
           {
-            "text": "\"No, I don't think so. Thanks anyway.\"",
+            "text": "\"No, i don't think so. Thanks anyway.\"",
             "next": "Lost Momentum Ending",
             "pts": -2
           },
@@ -1569,7 +1579,7 @@
             "pts": 12
           },
           {
-            "text": "\"Nah, I think I'd rather just cut my losses. Better to quit while you're ahead, you know?\"",
+            "text": "\"Nah, i think i'd rather just cut my losses. Better to quit while you're ahead, you know?\"",
             "next": "Jess38",
             "pts": 12
           },
@@ -1608,86 +1618,11 @@
           }
         ]
       },
-      "Jess51": {
-        "text": "Your salami jokes land perfectly. She laughs, out loud. \"I don't think I have the experience needed to be a spaceflight salami expert; that's high praise. See, this is the talent pool we need to be fostering further. It's very nice to meet you too, _____. Besides salami research, what cool things do you do?\"",
-        "choices": [
-          {
-            "text": "I'm a biologist.",
-            "next": "Jess19",
-            "pts": 0
-          },
-          {
-            "text": "I'm a mechanical engineer.",
-            "next": "Jess20",
-            "pts": 0
-          },
-          {
-            "text": "I'm an electrical engineer.",
-            "next": "Jess21",
-            "pts": 0
-          },
-          {
-            "text": "I'm a political scientist.",
-            "next": "Jess22",
-            "pts": 0
-          },
-          {
-            "text": "My background is in law.",
-            "next": "Jess23",
-            "pts": 0
-          },
-          {
-            "text": "I'm interested in business and finance.",
-            "next": "Jess24",
-            "pts": 0
-          },
-          {
-            "text": "I'm an aerospace engineer.",
-            "next": "Jess25",
-            "pts": 0
-          },
-          {
-            "text": "My background is in psychology.",
-            "next": "Jess26",
-            "pts": 0
-          },
-          {
-            "text": "My background is in medicine.",
-            "next": "Jess27",
-            "pts": 0
-          },
-          {
-            "text": "My background is in planetary science.",
-            "next": "Jess28",
-            "pts": 0
-          },
-          {
-            "text": "My background is in astronomy.",
-            "next": "Jess29",
-            "pts": 0
-          },
-          {
-            "text": "I'm sort of interested in a lot of things. I don't really know what I want.",
-            "next": "Jess30",
-            "pts": -5
-          },
-          {
-            "text": "Wouldn't you like to know?",
-            "next": "Jess31",
-            "pts": -10
-          },
-          {
-            "text": "\"I don't really do anything COOL.\"",
-            "next": "Jess53",
-            "pts": -10
-          }
-        ]
-      },
       "Jess52": {
         "text": "\"Um. I mean, everyone is entitled to their opinion, I suppose. Can I help you otherwise? I think that I need to grab some water soon.\"",
         "choices": [
           {
-            "text": "\"Sorry, yes, I'm all over the place, it's been a long ass day - my name's _____, it's nice to meet you.\"",
+            "text": "\"Sorry, yes, i'm all over the place, it's been a long ass day - my name's _____, it's nice to meet you.\"",
             "next": "Jess16",
             "pts": 2
           },
@@ -1703,7 +1638,7 @@
             "isDrunk": true
           },
           {
-            "text": "\"No, I don't think so. Thanks anyway.\"",
+            "text": "\"No, i don't think so. Thanks anyway.\"",
             "next": "Lost Momentum Ending",
             "pts": -2
           },
@@ -1721,156 +1656,6 @@
           }
         ]
       },
-      "Jess53": {
-        "text": "\"No, I'm sure you do SOMETHING cool. They wouldn't have taken you at ISU if you didn't.\"",
-        "choices": [
-          {
-            "text": "I'm a biologist.",
-            "next": "Jess19",
-            "pts": 0
-          },
-          {
-            "text": "I'm a mechanical engineer.",
-            "next": "Jess20",
-            "pts": 0
-          },
-          {
-            "text": "I'm an electrical engineer.",
-            "next": "Jess21",
-            "pts": 0
-          },
-          {
-            "text": "I'm a political scientist.",
-            "next": "Jess22",
-            "pts": 0
-          },
-          {
-            "text": "My background is in law.",
-            "next": "Jess23",
-            "pts": 0
-          },
-          {
-            "text": "I'm interested in business and finance.",
-            "next": "Jess24",
-            "pts": 0
-          },
-          {
-            "text": "I'm an aerospace engineer.",
-            "next": "Jess25",
-            "pts": 0
-          },
-          {
-            "text": "My background is in psychology.",
-            "next": "Jess26",
-            "pts": 0
-          },
-          {
-            "text": "My background is in medicine.",
-            "next": "Jess27",
-            "pts": 0
-          },
-          {
-            "text": "My background is in planetary science.",
-            "next": "Jess28",
-            "pts": 0
-          },
-          {
-            "text": "My background is in astronomy.",
-            "next": "Jess29",
-            "pts": 0
-          },
-          {
-            "text": "I'm sort of interested in a lot of things. I don't really know what I want.",
-            "next": "Jess30",
-            "pts": -5
-          },
-          {
-            "text": "Wouldn't you like to know?",
-            "next": "Jess31",
-            "pts": -10
-          },
-          {
-            "text": "\"No, really. I'm not that smart compared to these guys.\"",
-            "next": "Jess54",
-            "pts": -10
-          }
-        ]
-      },
-      "Jess54": {
-        "text": "\"... Hey, it's okay! Look, you don't have to be modest with me.\"",
-        "choices": [
-          {
-            "text": "I'm a biologist.",
-            "next": "Jess19",
-            "pts": 0
-          },
-          {
-            "text": "I'm a mechanical engineer.",
-            "next": "Jess20",
-            "pts": 0
-          },
-          {
-            "text": "I'm an electrical engineer.",
-            "next": "Jess21",
-            "pts": 0
-          },
-          {
-            "text": "I'm a political scientist.",
-            "next": "Jess22",
-            "pts": 0
-          },
-          {
-            "text": "My background is in law.",
-            "next": "Jess23",
-            "pts": 0
-          },
-          {
-            "text": "I'm interested in business and finance.",
-            "next": "Jess24",
-            "pts": 0
-          },
-          {
-            "text": "I'm an aerospace engineer.",
-            "next": "Jess25",
-            "pts": 0
-          },
-          {
-            "text": "My background is in psychology.",
-            "next": "Jess26",
-            "pts": 0
-          },
-          {
-            "text": "My background is in medicine.",
-            "next": "Jess27",
-            "pts": 0
-          },
-          {
-            "text": "My background is in planetary science.",
-            "next": "Jess28",
-            "pts": 0
-          },
-          {
-            "text": "My background is in astronomy.",
-            "next": "Jess29",
-            "pts": 0
-          },
-          {
-            "text": "I'm sort of interested in a lot of things. I don't really know what I want.",
-            "next": "Jess30",
-            "pts": -5
-          },
-          {
-            "text": "Wouldn't you like to know?",
-            "next": "Jess31",
-            "pts": -10
-          },
-          {
-            "text": "\"I'm not being modest. My background is genuinely uninteresting.\"",
-            "next": "Own Goal Ending",
-            "pts": -20
-          }
-        ]
-      },
       "Jess55": {
         "text": "\"Um. I mean, everyone is entitled to their opinion, I suppose. Can I help you otherwise? I think that I need to grab some water soon.\"",
         "choices": [
@@ -1885,7 +1670,7 @@
             "pts": 0
           },
           {
-            "text": "\"No, I don't think so. Thanks anyway.\"",
+            "text": "\"No, i don't think so. Thanks anyway.\"",
             "next": "Lost Momentum Ending",
             "pts": -2
           },
@@ -2061,12 +1846,6 @@
         "text": "Her eyes widen and she drops the phone. \"What the fuck?\"",
         "choices": [
           {
-            "text": "Get up and say, \"Haha! Pranked!\"",
-            "next": "Hammered Ending",
-            "pts": -20,
-            "isDrunk": true
-          },
-          {
             "text": "Grab the phone and say \"Hello? Hello??\"",
             "next": "Tackle Ending",
             "pts": -20,
@@ -2107,7 +1886,7 @@
         ]
       },
       "Jess65": {
-        "text": "\"Yeah, there are a few of people that I've worked with in that field over the years; I can give you an email to reach out to, if you want.\"",
+        "text": "\"Yeah, there are a few of people that i've worked with in that field over the years; i can give you an email to reach out to, if you want.\"",
         "choices": [
           {
             "text": "\"That would be amazing. Thank you so much!\"",
@@ -2158,12 +1937,12 @@
             "pts": -10
           },
           {
-            "text": "\"Hopefully I'm not being cocky. You can judge for yourself, I guess. Would you mind if I give you my LinkedIn? To stay connected after this?\"",
+            "text": "\"Hopefully I'm not being cocky. You can judge for yourself, i guess. Would you mind if i give you my LinkedIn? To stay connected after this?\"",
             "next": "Jess67",
             "pts": 2
           },
           {
-            "text": "\"Sorry. I didn't mean it like that. Man, I'm bad at this. \"",
+            "text": "\"Sorry. I didn't mean it like that. Man, i'm bad at this. \"",
             "next": "Jess75",
             "pts": -4
           },
@@ -2279,12 +2058,12 @@
             "pts": 15
           },
           {
-            "text": "\"No, wait, I was kidding, you don't have to do that.\"",
+            "text": "\"No, wait, i was kidding, you don't have to do that.\"",
             "next": "Jess64",
             "pts": 0
           },
           {
-            "text": "\"I'm still learning about geology; I don't actually know what I'm talking about.\"",
+            "text": "\"i'm still learning about geology; i don't actually know what i'm talking about.\"",
             "next": "Jess70",
             "pts": -5
           }
@@ -2294,12 +2073,12 @@
         "text": "She smiles. \"Thanks for chatting. If you see me around, don't hesitate to say hi.\"",
         "choices": [
           {
-            "text": "\"Absolutely. Hey, before you go, do you happen to have any contacts I might be able to reach out to that work in the field I'm in?\"",
+            "text": "\"Absolutely. Hey, before you go, do you happen to have any contacts i might be able to reach out to that work in the field i'm in?\"",
             "next": "Jess65",
             "pts": 1
           },
           {
-            "text": "\"Of course - before I run back to the snack table, do you think we might be able to connect on LinkedIn really quick?\"",
+            "text": "\"Of course - before i run back to the snack table, do you think we might be able to connect on LinkedIn really quick?\"",
             "next": "Jess67",
             "pts": 1
           },
@@ -2386,7 +2165,7 @@
         ]
       },
       "Jess77": {
-        "text": "\"Yes, I'd be happy to see your LinkedIn. Here.\" *She hands you her phone.*",
+        "text": "\"Yes, i'd be happy to see your LinkedIn. Here.\" *She hands you her phone.*",
         "choices": [
           {
             "text": "*add yourself on LinkedIn*",
@@ -2425,7 +2204,7 @@
             "pts": -2
           },
           {
-            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and I'll buy you a tall, crispy cold one.\"",
+            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and i'll buy you a tall, crispy cold one.\"",
             "next": "100 Percent Ending",
             "pts": 10,
             "isDrunk": true
@@ -2451,7 +2230,7 @@
             "pts": 5
           },
           {
-            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and I'll buy you a tall, crispy cold one.\"",
+            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and i'll buy you a tall, crispy cold one.\"",
             "next": "Here's My Card Ending",
             "pts": 10,
             "isDrunk": true
@@ -2477,7 +2256,7 @@
             "pts": -2
           },
           {
-            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and I'll buy you a tall, crispy cold one.\"",
+            "text": "\"Thank you SO much!! You're SO cool. If you come back sometime, meet us at Meteor in the city and i'll buy you a tall, crispy cold one.\"",
             "next": "First Contact Ending",
             "pts": 10,
             "isDrunk": true
@@ -2498,7 +2277,7 @@
             "pts": 5
           },
           {
-            "text": "\"I can show you what I can do when I'm - when - you're wearing when you're - when you're wearing nothing and when I'm doing - when - you and - when you and me are -\"",
+            "text": "\"i can show you what i can do when i'm - when - you're wearing when you're - when you're wearing nothing and when i'm doing - when - you and - when you and me are -\"",
             "next": "DrunkJess2",
             "pts": -30,
             "isDrunk": true
@@ -2840,7 +2619,7 @@
             "pts": 0
           },
           {
-            "text": "I'm an aerospace engineer.",
+            "text": "I'm an aerospace engineer!",
             "next": "Jess25",
             "pts": 0
           },
@@ -2865,14 +2644,9 @@
             "pts": 0
           },
           {
-            "text": "I'm sort of interested in a lot of things. I don't really know what I want.",
+            "text": "I just... really like space.",
             "next": "Jess30",
-            "pts": -5
-          },
-          {
-            "text": "Wouldn't you like to know?",
-            "next": "Jess31",
-            "pts": -10
+            "pts": 0
           },
           {
             "text": "\"Yeah, it'sssss salami studies. I graduated TOP of my class in Salami-ology.\"",
@@ -2926,7 +2700,7 @@
         "text": "\"... I mean-\"",
         "choices": [
           {
-            "text": "\"See, this is what ISU understands. I think if all world leaders had to share a basket of salami and crackers before negotiations, there\u2019d be fewer wars. Nobody starts a fight while holding a stick of cured meat. You\u2019re too busy goin 'ohhhh damn this one\u2019s got fennel in it.'\"",
+            "text": "\"See, this is what ISU understands. I think if all world leaders had to share a basket of salami and crackers before negotiations, there'd be fewer wars. Nobody starts a fight while holding a stick of cured meat. You're too busy goin 'ohhhh damn this one's got fennel in it.'\"",
             "next": "DrunkJess16",
             "pts": 3,
             "isDrunk": true
@@ -2934,10 +2708,10 @@
         ]
       },
       "DrunkJess16": {
-        "text": "\"Yeah, I mean, I think-\"",
+        "text": "\"Yeah, i mean, i think-\"",
         "choices": [
           {
-            "text": "\"People are always like 'oh you shouldn\u2019t eat processed meats' meanwhile I\u2019m processing JOY, Dr. Bennet. Explain that. Explain why every sandwich immediately becomes a king\u2019s sandwich the second salami enters the arena. Turkey? Office meeting meat. Ham? Divorced dad meat. Salami? Salami is cool as FUCK. Salami knows a guy who can 'take care of things.' It's objectively the best cold cut.\"",
+            "text": "\"People are always like 'oh you shouldn't eat processed meats' meanwhile I'm processing JOY, Dr. Bennet. Explain that. Explain why every sandwich immediately becomes a king's sandwich the second salami enters the arena. Turkey? Office meeting meat. Ham? Divorced dad meat. Salami? Salami is cool as FUCK. Salami knows a guy who can 'take care of things.' It's objectively the best cold cut.\"",
             "next": "DrunkJess17",
             "pts": -8,
             "isDrunk": true
@@ -2948,7 +2722,7 @@
         "text": "She starts to look around the room at other people. \"Hey, look, this has been-\"",
         "choices": [
           {
-            "text": "\"It\u2019s meat, but it\u2019s also a snack. It\u2019s portable. It\u2019s an emotional support snack, you know? These stupid cheese cubes they always bring out - you know, cheese tries real hard, but cheese gets all sweaty if you leave it out too long. Salami? Salami\u2019s already been through some stuff. It\u2019s cured. It\u2019s emotionally mature. And you open a bag and suddenly every mammal with a nose within a five-mile radius starts receiving visions from God. It makes your mouth water. I feel like one of Pavlov's dogs.\"",
+            "text": "\"It's meat, but it's also a snack. It's portable. It's an emotional support snack, you know? These stupid cheese cubes they always bring out - you know, cheese tries real hard, but cheese gets all sweaty if you leave it out too long. Salami? Salami's already been through some stuff. It's cured. It's emotionally mature. And you open a bag and suddenly every mammal with a nose within a five-mile radius starts receiving visions from God. It makes your mouth water. I feel like one of Pavlov's dogs.\"",
             "next": "DrunkJess18",
             "pts": -9,
             "isDrunk": true
@@ -2959,7 +2733,7 @@
         "text": "She smiles forcefully and starts to slowly rotate her body away from your very animated one, making eye contact with literally anybody else.",
         "choices": [
           {
-            "text": "\"And don\u2019t even get me started on charcuterie boards. We invented an entire wooden plank dedicated to letting salami recline majestically beside its pickle friends. That\u2019s culture. That\u2019s art. I love salami, man. I TRUST salami. IMPLICITLY. If a wizard offered me immortality but said I could never eat salami again I\u2019d be like 'how long we talkin' exactly.' You know? Do you see what I mean, Dr. Elizabeth Bennet? Are you picking what I'm putting down?\"",
+            "text": "\"And don't even get me started on charcuterie boards. We invented an entire wooden plank dedicated to letting salami recline majestically beside its pickle friends. That's culture. That's art. I love salami, man. I TRUST salami. IMPLICITLY. If a wizard offered me immortality but said I could never eat salami again I'd be like 'how long we talkin' exactly.' You know? Do you see what I mean, Dr. Elizabeth Bennet? Are you picking what I'm putting down?\"",
             "next": "DrunkJess19",
             "pts": -10,
             "isDrunk": true
@@ -3124,7 +2898,7 @@
             "isDrunk": true
           },
           {
-            "text": "\"Sorry. I'mmm SUPER drunk. Today was a lot. I think... I think I threw a piece of cheese at her? But I was trying to get her to catch it in her mouth, and then she got super mad at me! I feel bad now. I just want this night to be over. Networking sucks.\"",
+            "text": "\"Sorry. I'm SUPER drunk. Today was a lot. I think... i think I threw a piece of cheese at her? But i was trying to get her to catch it in her mouth, and then she got super mad at me! I feel bad now. I just want this night to be over. Networking sucks.\"",
             "next": "DrunkJess28",
             "pts": 10,
             "isDrunk": true
@@ -3195,7 +2969,7 @@
             "pts": 0
           },
           {
-            "text": "\"My background is innnn... law.\"",
+            "text": "\"My background is in... law.\"",
             "next": "DrunkJess31",
             "pts": 0
           },
@@ -3205,7 +2979,7 @@
             "pts": 0
           },
           {
-            "text": "\"I'mmmm an aerospace engineer!\"",
+            "text": "\"I'm an aerospace engineer!\"",
             "next": "DrunkJess31",
             "pts": 0
           },
@@ -3268,7 +3042,7 @@
         "text": "She laughs, but only her mouth laughs. The rest of her face is unmoved. Something tells you your comedy has not landed.",
         "choices": [
           {
-            "text": "\"Are you even payin' attention?",
+            "text": "\"Are you even payin' attention?\"",
             "next": "DrunkJess35",
             "pts": -20,
             "isDrunk": true
@@ -3352,26 +3126,56 @@
         ]
       },
       "DrunkJess36": {
-      "text": "\"I - haha... yeah..\"",
-      "choices": [
-        { "text": "Smile", "next": "Jess38", "pts": 0, "isDrunk": true },
-        { "text": "\"Welp. I've gotta dash. Good talk. Later, my slimes.\"", "next": "Go Home Ending", "pts": 0, "isDrunk": true }
-      ]
-    },
-    "DrunkJess37": {
-      "text": "\"...That's... wow, very cool.\"",
-      "choices": [
-        { "text": "Smile", "next": "Jess38", "pts": 0, "isDrunk": true },
-        { "text": "\"Are you impressed? Can I have an internship?\"", "next": "DrunkJess3", "pts": -4, "isDrunk": true },
-        { "text": "\"Welp. I've gotta dash. Good talk. Later, my slime.\"", "next": "Go Home Ending", "pts": 0, "isDrunk": true }
-      ]
-    },
-    "DrunkJess93": {
-      "text": "\"I - um... okay...\"",
-      "choices": [
-        { "text": "Run really hard in place", "next": "DrunkJess37", "pts": -10, "isDrunk": true }
-      ]
-    },
+        "text": "\"I - haha... yeah..\"",
+        "choices": [
+          {
+            "text": "Smile",
+            "next": "Jess38",
+            "pts": 0,
+            "isDrunk": true
+          },
+          {
+            "text": "\"Welp. I've gotta dash. Good talk. Later, my slimes.\"",
+            "next": "Go Home Ending",
+            "pts": 0,
+            "isDrunk": true
+          }
+        ]
+      },
+      "DrunkJess37": {
+        "text": "\"...That's... wow, very cool.\"",
+        "choices": [
+          {
+            "text": "Smile",
+            "next": "Jess38",
+            "pts": 0,
+            "isDrunk": true
+          },
+          {
+            "text": "\"Are you impressed? Can I have an internship?\"",
+            "next": "DrunkJess3",
+            "pts": -4,
+            "isDrunk": true
+          },
+          {
+            "text": "\"Welp. I've gotta dash. Good talk. Later, my slime.\"",
+            "next": "Go Home Ending",
+            "pts": 0,
+            "isDrunk": true
+          }
+        ]
+      },
+      "DrunkJess93": {
+        "text": "\"I - um... okay...\"",
+        "choices": [
+          {
+            "text": "Run really hard in place",
+            "next": "DrunkJess37",
+            "pts": -10,
+            "isDrunk": true
+          }
+        ]
+      },
       "DrunkJess95": {
         "text": "She furrows her brow. \"I - no?\"",
         "choices": [
@@ -3399,20 +3203,31 @@
           },
           {
             "text": "Do it again",
-            "next": "DrunkJess34",
+            "next": "DrunkJess98",
+            "pts": -20,
+            "isDrunk": true
+          }
+        ]
+      },
+      "DrunkJess98": {
+        "text": "\"I- hey! Stop!\"",
+        "choices": [
+          {
+            "text": "Third time's the charm",
+            "next": "Butt Bump Ending",
             "pts": -20,
             "isDrunk": true
           },
           {
-            "text": "Do it again but harder this time",
-            "next": "Butt Bump Ending",
-            "pts": -30,
+            "text": "\"TAG! You're it!\" *Sprint for the doors*",
+            "next": "Run Away Home Ending",
+            "pts": -6,
             "isDrunk": true
           },
           {
-            "text": "Run away giggling to the couches in the corner",
-            "next": "2048 Ending",
-            "pts": -2,
+            "text": "Roundhouse kick",
+            "next": "Injury 4 Ending",
+            "pts": -20,
             "isDrunk": true
           }
         ]
@@ -3442,7 +3257,7 @@
     },
     "Tackle Ending": {
       "title": "The Tackle Ending",
-      "message": "A cheerful voice on the other end says 'Hi, this is Brock Bennet, who is this?' but before you can respond, Elizabeth Bennet deftly grabs the phone back, and at the same time your good friend Darius tackles you from behind and prevents you from doing any more weird BS.\n\nYou hear the next day that Dr. Bennet only stayed for a little while longer before leaving. Your overall popularity at ISU seems to go down for some reason."
+      "message": "A cheerful voice on the other end says 'Hi, this is Brock Bennet, who is this?' but before you can respond, Elizabeth Bennet deftly grabs the phone back, and at the same time your good friend David Razo tackles you from behind and prevents you from doing any more weird BS. David is a student athlete, and so despite your thrashing, he easily picks you up over his head, spins you like a pizza, and throws you over the bike shed into the swamp.\n\nDr. Bennet high-fives him, and then complements him on the accuracy of his launch. 'That was a textbook tackle, David. I'm really impressed. You know, I have a lot of respect for athletes. I think that the discipline and work ethic it takes to be a student athlete is really admirable. And what a well-engineered throw! The timing, the trajectory! You seem like a really great guy, David. Do you have an internship lined up for the summer?'"
     },
     "Injury 5 Ending": {
       "title": "Injury 5 Ending",
@@ -3454,7 +3269,7 @@
     },
     "100 Percent Ending": {
       "title": "The Perfect Run",
-      "message": "SUCCESS! You knocked it out of the park, and not only acquired a contact from her but also gave her your LinkedIn. Well done! She smiles and heads off to the next person, but you actually exchange smiles with her twice more before the night is out. The conversation flowed so naturally that you almost forgot you were talking to someone who has been to space. You feel AMAZING.\n\nOn your way back to the snack table, a man intercepts you: a faculty member at ESA who overheard your conversation with Dr. Bennet and was, apparently, intrigued. 'I work on that exact project,' he says, handing you his card. 'We have a summer internship that keeps losing good candidates to SpaceX. I think you might be exactly the kind of person we're looking for.' He writes his PERSONAL email on the back of the card. 'Please do send me your CV.'\n\nWhat's more, on the way out to your car, you run into Dr. Bennet and her husband in the parking lot, where they're standing and scratching their heads next to their rental car with the hood up. Dr. Bennet catches your eye and quickly approaches YOU this time, seemingly apologetic. '____, sorry to bother you, I'm sure you're exhausted and trying to get home too, but I'm wondering if I could ask you a favor.'\n\nYou try to pretend like this is even slightly the case and that you are not overjoyed for another opportunity to speak with her. 'Oh, yeah, no worries in the least. What's going on?'\n\n'Our car battery seem to have died,' says her husband from behind her, 'and if you had jumper cables, and could try jumping it for us, we'd be so, so appreciative.'\n\nYou DO have jumper cables, and your own car's battery dies so often that you are familiar with the process. Brock Bennet stands behind you with his arms crossed as you, hands shaking, execute the battery revival perfectly on the first try. Dr. Bennet tries her key in the ignition, and it revs up easily.\n\nDr. Bennet's husband heartily shakes your hand. 'Thank you so, so much, ____. We really appreciate it. You're definitely my favorite ISU student tonight.'\n\nDr. Bennet gets out of the car and goes, 'Brock, you can't say that. We're not going to play favorites. But,' she adds, 'you seem very talented at electrical engineering, in addition to the other stuff we talked about. If the opportunity comes up, I'll do my best to recommend you to the right people.'\n\nYou thank them copiously, and exchange more pleasantries, and then drive home feeling like a million bucks. Which is just as well, because on the walk from your car to your apartment, you spot a twenty-euro note on the pavement. You look around. There is absolutely no one. It's just yours now.\n\nWhen you get back to the residence, your roommate is sitting on the floor with a box holding approximately 20 pieces of cheesecake. 'I misread the order form,' they say, gesturing helplessly at the cake. 'Please. Take as many as you want. I am begging you.' You take two. They taste incredible. They are still cold.\n\nYou check your email before bed and discover that a textbook you needed for next week - the one that costs \u20ac80 and has a three-week shipping delay - has just been made available as a free legal PDF by the publisher as part of some open-access initiative that was announced today and today only. You download it immediately.\n\nYour phone buzzes. It's a streaming service informing you that, as a valued customer, you've been randomly selected for a free three-month upgrade. You don't remember being a particularly valued customer. You accept anyway.\n\nYou fall asleep almost immediately, which never happens. You sleep for exactly the right number of hours. You do not wake up once. In the morning, the shower is the perfect temperature on the first try. Your tram arrives exactly as you reach the stop. Not a minute before, not a minute after. You didn't even check the schedule. You just walked up and there it was, like the universe had been holding it for you.\n\nIn the minutes before class starts, you're alone in the student lounge adjusting your hair, which was perfect when you woke up and has only gotten better. You give credit to the universe for the numerous strokes of luck that have occurred, but also take a moment to give credit to yourself for your quick wit and friendly conversational skill. You go to pat yourself on the back for doing a good job the previous night, but instead a different hand pats you on the back. You look and you see that it is in fact the luminous, divine hand of the ghost of Yuri Gagarin, who then daps you up, does a sick-ass kick flip on his skateboard, shreds an awesome riff on his electric guitar, and then ascends back into Heaven in a shaft of light while giving you finger guns. Hell yeah."
+      "message": "SUCCESS! You knocked it out of the park, and not only acquired a contact from her but also gave her your LinkedIn. Well done! She smiles and heads off to the next person, but you actually exchange smiles with her twice more before the night is out. The conversation flowed so naturally that you almost forgot you were talking to someone who has been to space. You feel AMAZING.\n\nOn your way back to the snack table, a man intercepts you: a faculty member at ESA who overheard your conversation with Dr. Bennet and was, apparently, intrigued. 'I work on that exact project,' he says, handing you his card. 'We have a summer internship that keeps losing good candidates to SpaceX. I think you might be exactly the kind of person we're looking for.' He writes his PERSONAL email on the back of the card. 'Please do send me your CV.'\n\nWhat's more, on the way out to your car, you run into Dr. Bennet and her husband in the parking lot, where they're standing and scratching their heads next to their rental car with the hood up. Dr. Bennet catches your eye and quickly approaches YOU this time, seemingly apologetic. '____, sorry to bother you, I'm sure you're exhausted and trying to get home too, but I'm wondering if I could ask you a favor.'\n\nYou try to pretend like this is even slightly the case and that you are not overjoyed for another opportunity to speak with her. 'Oh, yeah, no worries in the least. What's going on?'\n\n'Our car battery seem to have died,' says her husband from behind her, 'and if you had jumper cables, and could try jumping it for us, we'd be so, so appreciative.'\n\nYou DO have jumper cables, and your own car's battery dies so often that you are familiar with the process. Brock Bennet stands behind you with his arms crossed as you, hands shaking, execute the battery revival perfectly on the first try. Dr. Bennet tries her key in the ignition, and it revs up easily.\n\nDr. Bennet's husband heartily shakes your hand. 'Thank you so, so much, ____. We really appreciate it. You're definitely my favorite ISU student tonight.'\n\nDr. Bennet gets out of the car and goes, 'Brock, you can't say that. We're not going to play favorites. But,' she adds, 'you seem very talented at electrical engineering, in addition to the other stuff we talked about. If the opportunity comes up, I'll do my best to recommend you to the right people.'\n\nYou thank them copiously, and exchange more pleasantries, and then drive home feeling like a million bucks. Which is just as well, because on the walk from your car to your apartment, you spot a twenty-euro note on the pavement. You look around. There is absolutely no one. It's just yours now.\n\nWhen you get back to the residence, your roommate is sitting on the floor with a box holding approximately 20 pieces of cheesecake. 'I misread the order form,' they say, gesturing helplessly at the cake. 'Please. Take as many as you want. I am begging you.' You take two. They taste incredible. They are still cold.\n\nYou check your email before bed and discover that a textbook you needed for next week - the one that costs €80 and has a three-week shipping delay - has just been made available as a free legal PDF by the publisher as part of some open-access initiative. You download it immediately.\n\nYour phone buzzes. You fall asleep almost immediately, which never happens. You sleep for exactly the right number of hours. You do not wake up once. In the morning, the shower is the perfect temperature on the first try. Your tram arrives exactly as you reach the stop. Not a minute before, not a minute after. You didn't even check the schedule. You just walked up and there it was, like the universe had been holding it for you.\n\nIn the minutes before class starts, you're alone in the student lounge adjusting your hair, which was perfect when you woke up and has only gotten better. You give credit to the universe for the numerous strokes of luck that have occurred, but also take a moment to give credit to yourself for your quick wit and friendly conversational skill. You go to pat yourself on the back for doing a good job the previous night, but instead a different hand pats you on the back. You look and you see that it is in fact the luminous, divine hand of the ghost of Yuri Gagarin, who then daps you up, does a sick-ass kick flip on his skateboard, shreds an awesome riff on his electric guitar, and then ascends back into heaven in a shaft of light while giving you finger guns. Hell yeah. \n\nTriple click on the ISU logo on the Start Screen."
     },
     "Here's My Card Ending": {
       "title": "Here's My Card Ending",
@@ -3462,7 +3277,7 @@
     },
     "Polite Conversationalist Ending": {
       "title": "Polite Conversationalist Ending",
-      "message": "Dr. Bennet gives you a smile and a nod. 'For sure. Enjoy your evening.'\n\nAs you walk back to the snack table for some recovery cheese, you decide you felt good about that interaction! It was a lovely conversation, for the most part, and you felt like you were charming and polite. You think she liked you.\n\nBut you're trying to figure out where in there you were supposed to ask for an internship, or share your LinkedIn; the time just never felt right. You suppose that asking for things like that is always a little mistake. Maybe next time you should just go for it."
+      "message": "Dr. Bennet gives you a smile and a nod. 'For sure. Enjoy your evening.'\n\nAs you walk back to the snack table for some recovery cheese, you decide you felt good about that interaction! It was a lovely conversation, for the most part, and you felt like you were charming and polite. You think she liked you.\n\nBut you're trying to figure out where in there you were supposed to ask for an internship, or share your LinkedIn; the time just never felt right. You suppose that asking for things like that is always going to be at the cost of a little awkwardness. Maybe next time you should just go for it."
     },
     "Pity Party Ending": {
       "title": "Pity Party Ending",
@@ -3486,7 +3301,7 @@
     },
     "Hammered Ending": {
       "title": "Hammered Ending",
-      "message": "You got so drunk that Darius had to grab you by the shoulders and drag your ass out of Pioneer Hall before you further endangered your career prospects."
+      "message": "You're extremely drunk. Visibly. You're barely standing upright, and in a moment of imbalance you stumble and pitch sideways. You body-slam an ISU board member HARD, who body-slams the dean of students, and another, and another, and somehow a horrible domino effect of human bodies knocks down every single person in the room. It finally ends with your good friend Ken slamming headfirst into Felicette's statue. \n\nEveryone watches in horror as the statue wobbles, and then falls and breaks into several pieces on the tile below. \n\nSuddenly, the monstrous spectral ghost of Felicette the Cat springs from the wreckage. All the lights flicker out. In a deep, echoing French accent, Felicette swears to haunt ISU and its students forever, but says that you in particular are gonna get targeted. \n\nFor the rest of your life, every single time you put a glass of wine down on a table, a ghostly paw knocks it over the side. Also you didn't get an internship."
     },
     "Rage Quit Ending": {
       "title": "Rage Quit Ending",
@@ -3498,7 +3313,7 @@
     },
     "Injury 2 Ending": {
       "title": "Injury 2 Ending",
-      "message": "You move your tongue close to your wrist to lick her hand to get her to let go. She lets go before you can get the chance - but you've been trying to pull your hands out of her grasp with so much force that as soon as she lets go, you accidentally punch yourself hard in the face. The force of your punch makes you stagger, and you fall backward forcefully on your butt. It doesn't hurt in the moment, or when Darius throws you over his shoulder and drags you out the doors, or even later that night, but it sure does hurt in the morning. Days later, the doctor says that he's never seen the specific combination of a broken tailbone AND a broken nose, and asks you how it happened. You're too embarrassed to say."
+      "message": "You move your tongue close to your wrist to lick her hand to get her to let go. She lets go before you can get the chance - but you've been trying to pull your hands out of her grasp with so much force that as soon as she lets go, you accidentally punch yourself hard in the face. \n\nThe force of your punch makes you stagger, and you fall backward forcefully on your butt. It doesn't hurt in the moment, or when Darius throws you over his shoulder and drags you out the doors, or even later that night, but it sure does hurt in the morning. \n\nDays later, the doctor says that he's never seen the specific combination of a broken tailbone AND a broken nose, and asks you how it happened. You're too embarrassed to say."
     },
     "Injury 3 Ending": {
       "title": "Injury 3 Ending",
@@ -3510,11 +3325,11 @@
     },
     "Dr. Wotring Ending": {
       "title": "Dr. Wotring Ending",
-      "message": "In the middle of all of this, from behind Dr. Bennet you see your esteemed professor, Dr. Virginia Wotring.\n\nShe gives you a look that could fry an egg, and says, 'You know, I think you're done networking for the evening.'\n\nThen she presses two fingers to her temple, and you combust into a pile of ash."
+      "message": "In the middle of all of this, from behind Dr. Bennet you see your esteemed professor, Dr. Virginia Wotring.\n\nShe gives you a look that could fry an egg, and says, 'You know, I think you're done networking for the evening.'\n\nThen she presses two fingers to her temple, and you spontaneously combust into a pile of pure carbon."
     },
     "Run Away Home Ending": {
       "title": "Run Away Home Ending",
-      "message": "You panic and run home without stopping. Which is crazy, because usually you take the tram, but you actually managed to RUN all the way back home. You get to your door and finally breathe normally before realizing you left your keys at school. Probably should have taken a second to think before sprinting away."
+      "message": "You panic and run home without stopping. Which is crazy, because usually you take the tram, but you actually managed to RUN all the way back home. \n\nYou get to your door and finally breathe normally before realizing you left your keys at school. Probably should have taken a second to think before sprinting away."
     },
     "But Why Though Ending": {
       "title": "But Why Though Ending",
@@ -3538,7 +3353,7 @@
     },
     "Task Failed Successfully Ending": {
       "title": "Task Failed Successfully Ending",
-      "message": "She grins, and pulls out her phone. 'I know a guy. I hope he's not in the middle of something right now.'\nThe guy she knows turns out to be Dr. Jim Head, a lunar geology professor at a university, who is apparently in the middle of eating lunch at his desk when Dr. Bennet suddenly FaceTimes him. He appears on screen with the expression of a kindly older man who wasn't expecting a phone call.\n\n'Elizabeth?' he says. 'Everything okay?'\n\n'Quick question,' Dr. Bennet says immediately. 'Do volcanoes count as rock science?'\n\nThere is a long pause. Dr. Head slowly lowers the sandwich.\n\n'\u2026What?'\n\nYou lean into frame before she can poison the well. 'Okay, my point is that volcanoes are obviously more than just rocks. There\u2019s chemistry and fluid dynamics, too.'\n\n'Volcanoes are geology, so I'd say they are... yeah, volcanoes are rock science.' Dr. Head says, still very confused.\n\nDr. Bennet folds her arms with visible satisfaction. 'Thank you, Dr. Head.'\n\nYou refuse to surrender, and your original goal of asking for an internship is lost. Dr. Bennet shall not win this argument. 'That\u2019s reductive, though. A volcano isn\u2019t just sitting there being a rock. It\u2019s DOING things.'\n\nDr. Head stares at you over the top of his glasses with the patient expression of a professor deciding whether this is a teachable moment or a cry for help.\n\n'Well,' he says carefully, 'volcanology is interdisciplinary.'\n\nYou immediately point at the phone. 'Exactly.'\n\nDr. Bennet says, 'Wait, Jim, no. We're trying to prove ____ WRONG.'\n\n'I mean,' he continues, now fully trapped in the conversation, 'you could say that there\u2019s geophysics, thermodynamics, chemistry...' He trails off.\n\nYou turn toward Dr. Bennet with a smirk you recognize is slightly inappropriate, given that she is such a higher authority figure than you. But your vindication comes from a DIFFERENT higher authority figure. 'He's siding with me, I think.'\n\n'He did not SIDE with you.'\n\n'I heard what I heard.'\n\nDr. Head takes another bite of his sandwich. 'To be clear, volcanoes are fundamentally geological structures.'\n\n'But not only geological,' you fire back instantly. \n\n'...Technically,' he admits, 'the chemistry thing is not entirely wrong...'\n\nYou throw both hands into the air 'Dr. Head,' you ask, 'would you say I was technically correct?'\n\nHe chews thoughtfully for a moment. '\u2026Against my better judgment, yes... are you a volcanologist yourself?'\n\nYou confirm this to him, and he thinks for another moment before going, 'I'm sorry, what did you say your name was?'\n\nDespite her feigned exasperation, in a show of good sportsmanship, Dr. Bennet allows you to keep her phone for as long as it takes you to ask Dr. Head for his contact information. Dr. Head has many more thoughts about your argument, and you both agree to continue the debate later on a proper Zoom call, and also perhaps discuss the possibility of him hosting your thesis. You're not... really sure how you got here, but you're not complaining whatsoever."
+      "message": "She grins, and pulls out her phone. 'I know a guy. I hope he's not in the middle of something right now.'\nThe guy she knows turns out to be Dr. Jim Head, a lunar geology professor at a university, who is apparently in the middle of eating lunch at his desk when Dr. Bennet suddenly FaceTimes him. He appears on screen with the expression of a kindly older man who wasn't expecting a phone call.\n\n'Elizabeth?' he says. 'Everything okay?'\n\n'Quick question,' Dr. Bennet says immediately. 'Do volcanoes count as rock science?'\n\nThere is a long pause. Dr. Head slowly lowers the sandwich.\n\n'…What?'\n\nYou lean into frame before she can poison the well. 'Okay, my point is that volcanoes are obviously more than just rocks. There's chemistry and fluid dynamics, too.'\n\n'Volcanoes are geology, so I'd say they are... yeah, volcanoes are rock science.' Dr. Head says, still very confused.\n\nDr. Bennet folds her arms with visible satisfaction. 'Thank you, Dr. Head.'\n\nYou refuse to surrender, and your original goal of asking for an internship is lost. Dr. Bennet shall not win this argument. 'That's reductive, though. A volcano isn't just sitting there being a rock. It's DOING things.'\n\nDr. Head stares at you over the top of his glasses with the patient expression of a professor deciding whether this is a teachable moment or a cry for help.\n\n'Well,' he says carefully, 'volcanology is interdisciplinary.'\n\nYou immediately point at the phone. 'Exactly.'\n\nDr. Bennet says, 'Wait, Jim, no. We're trying to prove ____ WRONG.'\n\n'I mean,' he continues, now fully trapped in the conversation, 'you could say that there's geophysics, thermodynamics, chemistry...' He trails off.\n\nYou turn toward Dr. Bennet with a smirk you recognize is slightly inappropriate, given that she is such a higher authority figure than you. But your vindication comes from a DIFFERENT higher authority figure. 'He's siding with me, I think.'\n\n'He did not SIDE with you.'\n\n'I heard what I heard.'\n\nDr. Head takes another bite of his sandwich. 'To be clear, volcanoes are fundamentally geological structures.'\n\n'But not only geological,' you fire back instantly. \n\n'...Technically,' he admits, 'the chemistry thing is not entirely wrong...'\n\nYou throw both hands into the air 'Dr. Head,' you ask, 'would you say I was technically correct?'\n\nHe chews thoughtfully for a moment. '…Against my better judgment, yes... are you a volcanologist yourself?'\n\nYou confirm this to him, and he thinks for another moment before going, 'I'm sorry, what did you say your name was?'\n\nDespite her feigned exasperation, in a show of good sportsmanship, Dr. Bennet allows you to keep her phone for as long as it takes you to ask Dr. Head for his contact information. Dr. Head has many more thoughts about your argument, and you both agree to continue the debate later on a proper Zoom call, and also perhaps discuss the possibility of him hosting your thesis. You're not... really sure how you got here, but you're not complaining whatsoever."
     },
     "Too Nonchalant Ending": {
       "title": "Too Nonchalant Ending",
@@ -3558,7 +3373,7 @@
     },
     "Mysterious Man Ending": {
       "title": "Mysterious Man Ending",
-      "message": "Dr. Bennet walks away at a speed you are too drunk to interpret as a 50/50 blend of frightened and pissed off. Plus, your voice has increased in volume without you noticing, and you also hadn't noticed everyone else in the room stop their conversation to look at the source of the noise. Most of them look weirded out, and you can see Darius quickly approaching you from the corner. But a different stranger in the back also starts clapping emphatically, smiling and wiping tears from his face. You look - he's got a long white beard, a whimsical hat, and a cloak the color of a smoked, spicy chorizo sausage. Despite this odd attire, nobody else seems to notice him. All nerves about social interaction now lost, you feel somehow that you MUST speak to him. \n\nYou approach, and he grasps your hand with both of his and shakes it so hard your whole body moves. 'My pupil!' he cries with joy. 'My salami apprentice! You have made me proud on this evening. Oh, you have done what you said you could not do, and that is speak to new people for the first time. I am overjoyed to hear you spread the good word of salami. Your words are like mustard on dark rye, my student,' the old man says, gripping your shoulders with terrifying strength. 'Joyful. Proud. Slightly upsetting to weak people.'\nYou stare at him. Up close, his cloak smells strongly of paprika, black pepper, and umami. Tiny slices of cured meat hang from his belt like arcane charms.\n'I'm sorry,' you say. 'Who... are you?'\n\nThe old man gasps theatrically and places one hand over his heart.\n\n'WHO am I? WHO am I?' He leans in close and says, 'Why, I am Garibaldo the Preserved! The Umami King of Alsace-Lorraine. Keeper of the Nine Salts. Duke of Soppressata. Excommunicated from four vegetarian co-ops. I am the Salami Wizard.'\n\nHe bows deeply. \n\nYou scoff. '\u2026You're not real. I'm drunk and this is a hallucination.'\n\nHis eyebrows wiggle mischeviously. 'ALL magic sounds fake before the nitrates awaken. I have watched over this school since 1999. I was in the SSP.'\n\nBefore you can respond, he reaches into his cloak and produces an unrealistically long stick of salami, at least a meter and a half in length. It hums faintly. You bring your hands to your head and say, 'Whoaaaaa! Epic.'\n\n'The Staff of Genoa,' he whispers reverently, eyes wide and crazy. 'Do not point it at the moon.'\n\nSuddenly, thunder rumbles in the distance, despite the clear skies outside. He sighs, and kneels to put his hand on your shoulder.\n\n'My apprentice,' he says solemnly, 'My time here is short, and my message is urgent and personal. The world grows dark. People fear sodium. They buy low-fat turkey sticks, and charcuterie boards are becoming over 50% hummus. We stand at the edge of an age of blandness. You and I have the power to change this. To shape the salami path forward as we desire. But to get the things you want, the future you seek - you must have COURAGE. You must ASK for the good things that deep in your salami soul, you know you deserve.'\n\nHe slams the salami staff against the floor. A great portal appears behind him, and he says, 'I have searched many years for one brave enough to speak publicly and drunkenly of cured meats without shame. Tonight\u2026 I found you. There is hope yet. You have found your courage. Use it well next time.'\n\nYou swallow. 'I dunno, man. I'm just kinda hammered.'\n\nHe hands you the staff, and it buzzes and crackles as it enters your grasp. It feels... right. Like you had its power inside you all along.\n\nThe wizard turns to leave. 'My scholar of salami, you need no elixirs to speak with wit and charm.' He winks, and then the portal closes and he is gone, and you look down and you're holding a mop handle, and a new, beautiful sense of courage has blossomed in your chest. \n\nOnly then does Darius grab your shoulders and bring you outside, and you struggle against him loudly and continue yammering about your unquenchable desire to follow the wizard to the salami dimension. Perhaps tonight was not your night, and who knows what was in your wine, but somehow you have gained a power that makes you think that if you tried again, you would do it all perfectly."
+      "message": "Dr. Bennet walks away at a speed you are too drunk to interpret as a 50/50 blend of frightened and pissed off. Plus, your voice has increased in volume without you noticing, and you also hadn't noticed everyone else in the room stop their conversation to look at the source of the noise. Most of them look weirded out, and you can see Darius quickly approaching you from the corner. But a different stranger in the back also starts clapping emphatically, smiling and wiping tears from his face. You look - he's got a long white beard, a whimsical hat, and a cloak the color of a smoked, spicy chorizo sausage. Despite this odd attire, nobody else seems to notice him. All nerves about social interaction now lost, you feel somehow that you MUST speak to him. \n\nYou approach, and he grasps your hand with both of his and shakes it so hard your whole body moves. 'My pupil!' he cries with joy. 'My salami apprentice! You have made me proud on this evening. Oh, you have done what you said you could not do, and that is speak to new people for the first time. I am overjoyed to hear you spread the good word of salami. Your words are like mustard on dark rye, my student,' the old man says, gripping your shoulders with terrifying strength. 'Joyful. Proud. Slightly upsetting to weak people.'\nTiny slices of cured meat hang from his belt like arcane charms.\n'I'm sorry,' you say. 'Who... are you?'\n\nThe old man gasps theatrically and places one hand over his heart.\n\n'WHO am I? WHO am I?' He leans in close and says, 'Why, I am Garibaldo the Preserved! The Umami King of Alsace-Lorraine. Keeper of the Nine Salts. Duke of Soppressata. Excommunicated from four vegetarian co-ops. I am the Salami Wizard.'\n\nHe bows deeply. \n\nYou scoff. '...You're not real. I'm drunk and this is a hallucination.'\n\nHis eyebrows wiggle mischeviously. 'ALL magic sounds fake before the nitrates awaken. I have watched over this school since 1999. I was in the SSP.'\n\nBefore you can respond, he reaches into his cloak and produces an unrealistically long stick of salami, at least a meter and a half in length. It hums faintly. \n\n'The Staff of Genoa,' he whispers reverently, eyes wide and crazy. 'Do not point it at the moon.'\n\nSuddenly, thunder rumbles in the distance, despite the clear skies outside. He sighs, and kneels to put his hand on your shoulder.\n\n'My apprentice,' he says solemnly, 'My time here is short, and my message is urgent and personal. The world grows dark. People fear sodium. They buy low-fat turkey sticks, and charcuterie boards are becoming over 50% hummus. We stand at the edge of an age of blandness. You and I have the power to change this. To shape the salami path forward as we desire. But to get the things you want, the future you seek - you must have COURAGE. You must ASK for the good things that deep in your salami soul, you know you deserve.'\n\nHe slams the salami staff against the floor. A great portal appears behind him, and he says, 'I have searched many years for one brave enough to speak publicly and drunkenly of cured meats without shame. Tonight... I found you. There is hope yet. You have found your courage. Use it well next time.'\n\nYou swallow. 'I dunno, man. I'm just kinda hammered.'\n\nHe hands you the staff, and it buzzes and crackles as it enters your grasp. It feels... right. Like you had its power inside you all along.\n\nThe wizard turns to leave. 'My scholar of salami, you need no elixirs to speak with wit and charm.' He winks, and then the portal closes and he is gone, and you look down and you're holding a mop handle, and a new, beautiful sense of courage has blossomed in your chest. \n\nOnly then does Darius grab your shoulders and bring you outside, and you struggle against him loudly and continue yammering about your unquenchable desire to follow the wizard to the salami dimension. Perhaps tonight was not your night, and who knows what was in your wine, but somehow you have gained a power that makes you think that if you tried again, you would do it all perfectly."
     },
     "Rapid Unscheduled Decompression Ending": {
       "title": "Rapid Unscheduled Decompression Ending",
@@ -3575,6 +3390,14 @@
     "Tablecloth Ending": {
       "title": "Tablecloth Ending",
       "message": "In your head, this goes really well. The tablecloth theoretically should be pulled away cleanly, and all of the glasses and plates and other items should stay right in place on the table, due to inertia. In reality, as soon as you yank the cloth, you fuck it up so bad that all of the plates and cups are violently ejected from the table, and spilled onto other surfaces like the floor, your outfit, and Dr. Elizabeth Bennet. You aren't really sure what emotions she's experiencing, but you're certain she's not impressed. You apologize profusely and then go to wash off in the lounge sink. When you come back out, Dr. Bennet has left for the evening. You shake your fist at the sky and curse Isaac Newton for leading you astray about inertia, and wonder how your flawless plan could have gone so awry. Darius doesn't let you hear the end of it for the rest of the year. Neither does anybody else."
+    },
+    "EarlyExit": {
+      "title": "You Didn't Even Start The Game",
+      "message": "You looked at Ella's networking simulator, felt a sudden, sharp wave of existential dread, and decided that the only winning move was not to play. Hey, nice War Games reference. \n\nYou turn off your computer and go for a walk. The air is fresh, the birds are singing, and you are at peace. Jobs are for nerds, anyway."
+    },
+    "DariusTime": {
+      "title": "Darius Time",
+      "message": "You walk back up to Darius, hoping he can do the hard work and butter up Dr. Bennet for you, but before you can say anything, Darius steals your phone. He runs away giggling. You give chase, but he's too fast, and he takes so many pictures that your phone maxes out its storage and then runs out of battery and dies. What were you expecting?"
     }
   }
 }

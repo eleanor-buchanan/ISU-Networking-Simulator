@@ -1,9 +1,11 @@
 // 1. Create the music object
 const bgMusic = new Audio('spacejazz.mp3');
+const fanfareSound = new Audio('fanfare.mp3'); // Ensure this matches your filename!
 
 // 2. Set properties
 bgMusic.loop = true;      // Makes it repeat forever
 bgMusic.volume = 0.15;    // Background music should usually be quieter than SFX (15% volume)
+fanfareSound.volume = 0.4; // Fanfare should be a bit louder for the reward
 
 // 3. Create a function to start the music
 function startMusic() {
@@ -83,12 +85,12 @@ const outfits = [
   { desc: "Floor-length red silk gown with slit, opera gloves, diamond necklace, metallic high heels", pts: 10 },
   { desc: "High-waisted jeans, tucked white T-shirt, denim jacket, canvas sneakers.", pts: 20 },
   { desc: "Cream turtleneck sweater, plaid skirt, sheer tights, ankle boots", pts: 30 },
-  { desc: "Wide-leg flowy green pants, fitted black turtleneck, long white wool coat, leather ankle boots, thin gold necklace with matching earrings", pts: 50 },
   { desc: "Jeans and t-shirt with a nice blazer on top", pts: 30 },
   { desc: "Satin dark green cocktail dress, silver earrings, matching clutch purse, strappy heels", pts: 40 },
-  { desc: "Blue plaid pajama pants, white undershirt, gray bathrobe, bare feet.", pts: 0 },
+  { desc: "Inflatable dinosaur costume", pts: -50 },
+  { desc: "Blue plaid pajama pants, white undershirt, gray bathrobe, bare feet.", pts: -20 },
   { desc: "Lakers basketball uniform", pts: -20 },
-  { desc: "Brown bomber jacket, black jeans, cream sweater, brown dress shoes", pts: 40 },
+  { desc: "Nothing", pts: -50 },
 ];
 
 // Replace your old "Initialize Outfits" loop with this:
@@ -182,41 +184,63 @@ function renderChoices(choices, dataSet) {
 }
 
 function handleDecision(choice, dataSet) {
-  console.log("handleDecision called with choice.next:", choice.next, "dataSet:", dataSet);
+  // 1. Log the player's choice immediately
   addLogEntry(currentNPCKey, "YOU", choice.text);
-  
-  const pointsAwarded = (choice.pts !== undefined) ? choice.pts : (choice.PointValue || 0);
-  
-  score += pointsAwarded;
 
-  updateScoreDisplays(pointsAwarded);
-
-  if (choice.getWine) {
-    document.getElementById('sip-btn-global').style.visibility = "visible";
+  // 2. Hide buttons and show processing message immediately
+  const choiceArea = document.getElementById(`choices-${currentNPCKey}`);
+  if (choiceArea) {
+    choiceArea.innerHTML = "<i>[SYSTEM: PROCESSING RESPONSE...]</i>";
   }
 
-  // Check for Endings
-  if (story.endings && story.endings[choice.next]) {
-    setTimeout(() => triggerResult(choice.next), 1000);
-    return;
-  }
+  // 3. Start the delay
+  setTimeout(() => {
+    // A. Handle Scoring
+    const pointsAwarded = (choice.pts !== undefined) ? choice.pts : (choice.PointValue || 0);
+    score += pointsAwarded;
+    updateScoreDisplays(pointsAwarded);
 
-  // Transitions
-  if (choice.next === "UNLOCK_BENNET") {
-    document.getElementById('window-darius').classList.remove('active');
-    const row = document.getElementById('row-meir');
-    row.classList.remove('locked');
-    document.getElementById('meir-desc').textContent = "(Stranger: standing in the middle of the room in a group)";
-    row.onclick = () => {
-        currentNPCKey = "meir";
-        document.getElementById('window-meir').classList.add('active');
-        startDialogue("Start", story.prologue.jess);
-    };
-    showScreen('screen-hall');
-    return;
-  }
+    // B. Handle Wine Activation
+    if (choice.getWine) {
+      const wineBtn = document.getElementById('sip-btn-global');
+      if (wineBtn) wineBtn.style.visibility = "visible";
+    }
 
-  setTimeout(() => startDialogue(choice.next, dataSet), 400);
+    // C. Check for Minigame Intercept
+    const minigameTriggers = ["Jess16", "Jess17", "Jess18"];
+    if (minigameTriggers.includes(choice.next)) {
+      startProxemicsMinigame(choice.next, dataSet);
+      return; // Exit the timeout function
+    }
+
+    // D. Check for Endings
+    if (story.endings && story.endings[choice.next]) {
+      triggerResult(choice.next);
+      return; // Exit the timeout function
+    }
+
+    // E. Handle Special Unlock Transition (Darius to Bennet)
+    if (choice.next === "UNLOCK_BENNET") {
+      document.getElementById('window-darius').classList.remove('active');
+      const row = document.getElementById('row-meir');
+      if (row) {
+        row.classList.remove('locked');
+        document.getElementById('meir-desc').textContent = "(Stranger: standing in the middle of the room in a group)";
+        row.onclick = () => {
+          currentNPCKey = "meir";
+          document.getElementById('window-meir').classList.add('active');
+          // Resuming with the Jess data block
+          startDialogue("Start", story.prologue.jess); 
+        };
+      }
+      showScreen('screen-hall');
+      return;
+    }
+
+    // F. Default: Progress to the next dialogue node
+    startDialogue(choice.next, dataSet);
+
+  }, 800); // 800ms is the perfect "human-like" pause
 }
 
 function addLogEntry(char, name, text) {
@@ -379,16 +403,36 @@ let isHardMode = false;
 const hardOverlay = document.getElementById('hard-mode-overlay');
 
 function toggleHardMode() {
+  const overlay = document.getElementById('hard-mode-overlay');
+  const btn = document.getElementById('btn-hard-mode'); // Find the button
+  
+  if (!overlay) return;
+
   isHardMode = !isHardMode;
   
   if (isHardMode) {
-    hardOverlay.style.display = 'block';
-    // Add the listener for mouse movement
+    overlay.style.display = 'block';
     document.addEventListener('mousemove', moveSpotlight);
-    console.log("HARD MODE ACTIVATED: Networking is now literally impossible.");
+    
+    // CHANGE THE TEXT HERE
+    if (btn) btn.textContent = "wait no I don't like that";
+
+    // Visual feedback
+    if (btn) {
+        btn.style.backgroundColor = "#000000";
+        btn.style.color = "#ff0000";
+    }
   } else {
-    hardOverlay.style.display = 'none';
+    overlay.style.display = 'none';
     document.removeEventListener('mousemove', moveSpotlight);
+    
+    // REVERT THE TEXT HERE
+    if (btn) btn.textContent = "HARD MODE";
+    
+    if (btn) {
+        btn.style.backgroundColor = "#000";
+        btn.style.color = "#ff0000";
+    }
   }
 }
 
@@ -454,8 +498,8 @@ async function fetchGlobalScores() {
         let entries = data.dreamlo.leaderboard.entry;
         if (!Array.isArray(entries)) entries = [entries];
 
-        const top5 = [...entries].sort((a, b) => parseInt(b.score) - parseInt(a.score)).slice(0, 5);
-        const bottom5 = [...entries].sort((a, b) => parseInt(a.score) - parseInt(b.score)).slice(0, 5);
+        const top10 = [...entries].sort((a, b) => parseInt(b.score) - parseInt(a.score)).slice(0, 10);
+        const bottom10 = [...entries].sort((a, b) => parseInt(a.score) - parseInt(b.score)).slice(0, 10);
 
         const renderEntry = (s, color) => {
             const pName = s.name ? decodeURIComponent(s.name) : "Unknown_User";
@@ -469,8 +513,8 @@ async function fetchGlobalScores() {
             `;
         };
 
-        highList.innerHTML = top5.map(s => renderEntry(s, "#00ff00")).join('');
-        lowList.innerHTML = bottom5.map(s => renderEntry(s, "#ff0000")).join('');
+        highList.innerHTML = top10.map(s => renderEntry(s, "#00ff00")).join('');
+        lowList.innerHTML = bottom10.map(s => renderEntry(s, "#ff0000")).join('');
 
     } catch (e) {
         console.error("Uplink error:", e);
@@ -485,7 +529,7 @@ function triggerResult(endingKey) {
     const title = endingData ? endingData.title : "Unknown Ending";
     const message = endingData ? endingData.message : "The simulation ended unexpectedly.";
 
-    let nickname = prompt(`[${title.toUpperCase()}] reached. Enter nickname:`, "Anonymous");
+    let nickname = prompt(`[${title.toUpperCase()}] reached. Enter name:`, "Anonymous");
     
     if (nickname !== null) {
         if (nickname.trim() === "") nickname = "Anonymous";
@@ -496,4 +540,137 @@ function triggerResult(endingKey) {
     document.getElementById('res-header').textContent = title;
     document.getElementById('res-text').textContent = message;
     document.getElementById('res-score').textContent = Math.floor(score);
+}
+
+/** 
+ * PROXEMICS CONFIGURATION
+ * Edit X and Y (0-100) to move people/slots manually.
+ */
+const proxemicsConfig = {
+    bennet: { x: 32, y: 53 }, // Focal point on the left side
+    others: [
+        { x: 49, y: 30 }, // NPC 1 (Top arm of the U)
+        { x: 62, y: 50 }, // NPC 2 (Back of the U)
+        { x: 50, y: 68 }  // NPC 3 (Bottom arm of the U)
+    ],
+    slots: [
+        { x: 70, y: 69, pts: -15, msg: "Terrible. You are not in the circle, and it feels awkward for the people in the circle to have to shout to you all the way out there. Get WAY closer!" },
+        { x: 46, y: 50, pts: -10,  msg: "No. You're in the middle of the circle. This is rude to the people standing behind you. Get out of there, diva!" },
+        { x: 35, y: 31, pts: 15, msg: "Good! You're next to her in the circle without being too close to her. Might want to give your friend on the right a little room, but they are also obligated to accommodate you slightly and make the space themselves." },
+        { x: 37, y: 67, pts: -5, msg: "Not great. Optimal for getting her attention, but you're inside the personal space bubbles of both Dr. Bennet and your friend to the right. Back up a little." },
+        { x: 61, y: 36, pts: 10,  msg: "Not bad; you're successfully inside of the circle. You're a little far from Dr. Bennet for a more personal conversation, but that's okay." }
+    ]
+};
+
+let pendingDestinationID = "";
+let pendingDataSet = null;
+
+function startProxemicsMinigame(destinationID, currentDataSet) {
+    const win = document.getElementById('window-proxemics');
+    const container = document.getElementById('proxemics-map-container');
+    const feedback = document.getElementById('proxemics-feedback');
+    
+    // ADD THIS LINE: It tells the script to find the button in your HTML
+    const contBtn = document.getElementById('proxemics-continue-btn');
+
+    pendingDestinationID = destinationID;
+    pendingDataSet = currentDataSet;
+    
+    win.classList.add('active');
+    container.innerHTML = ""; 
+    
+    if (feedback) {
+        feedback.textContent = "Select an appropriate position to have a conversation with Dr. Bennet. Avoid overcrowding her or standing too far away.";
+        feedback.style.color = "#000";
+    }
+
+    // Hide the continue button at the start
+    if (contBtn) contBtn.style.display = "none"; 
+
+    // 1. Draw Dr. Bennet
+    drawStaticCircle(container, proxemicsConfig.bennet.x, proxemicsConfig.bennet.y, "circle-ent bennet-static");
+
+    // 2. Draw Other NPCs
+    proxemicsConfig.others.forEach(pos => {
+        drawStaticCircle(container, pos.x, pos.y, "circle-ent npc-static");
+    });
+
+    // 3. Draw Player Click Slots
+    proxemicsConfig.slots.forEach(s => {
+        const slot = drawStaticCircle(container, s.x, s.y, "circle-ent player-slot");
+        
+        slot.onclick = () => {
+            score += s.pts;
+            updateScoreDisplays(s.pts);
+            
+            if (feedback) {
+                feedback.textContent = s.msg;
+                feedback.style.color = s.pts > 0 ? "#009d00" : "#cc0000";
+            }
+
+            // Disable further clicks
+            document.querySelectorAll('.player-slot').forEach(el => el.style.pointerEvents = 'none');
+            
+            // Show the button we defined at the start
+            if (contBtn) contBtn.style.display = "block"; 
+        };
+    });
+}
+
+function finishProxemics() {
+    const win = document.getElementById('window-proxemics');
+    win.classList.remove('active');
+    
+    // Now resume the dialogue exactly where we left off
+    startDialogue(pendingDestinationID, pendingDataSet);
+}
+
+
+// Simple function to draw the circles
+function drawStaticCircle(parent, x, y, className) {
+    const div = document.createElement('div');
+    div.className = className;
+    div.style.left = x + "%";
+    div.style.top = y + "%";
+    parent.appendChild(div);
+    return div;
+}
+
+/** SECRET LOGO EASTER EGG **/
+let logoClicks = 0;
+let logoTimer;
+
+function handleLogoSecret() {
+    logoClicks++;
+    
+    // Clear the timer every time a new click happens
+    clearTimeout(logoTimer);
+
+    if (logoClicks === 3) {
+        const linkBox = document.getElementById('secret-link-box');
+        if (linkBox) {
+            // 1. Show the secret container
+            linkBox.style.display = 'block';
+            console.log("SYSTEM: Dialogue map decrypted. Access granted.");
+
+            // 2. Audio Logic: Temporarily dip the background music
+            const originalVol = bgMusic.volume;
+            bgMusic.volume = originalVol * 0.2; // Dip to 20% of current setting
+
+            // 3. Play the specific fanfare file
+            fanfareSound.currentTime = 0; // Reset to start in case they click it again later
+            fanfareSound.play().catch(e => console.error("Audio error:", e));
+
+            // 4. Restore original volume when the fanfare finishes
+            fanfareSound.onended = () => {
+                bgMusic.volume = originalVol;
+            };
+        }
+        logoClicks = 0; // Reset for next time
+    } else {
+        // Reset the count if they stop clicking for more than 1.2 seconds
+        logoTimer = setTimeout(() => {
+            logoClicks = 0;
+        }, 1200);
+    }
 }

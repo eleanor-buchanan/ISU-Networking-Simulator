@@ -29,14 +29,18 @@ body {
 }
 
 .window {
-  width: 1400px;
-  height: 850px;
+  width: 950px;   /* Reduced from 1400px */
+  height: 700px;  /* Reduced from 850px */
   background: var(--retro-gray);
   border: 4px outset var(--retro-border-light);
   display: none;
   flex-direction: column;
   position: absolute;
   box-shadow: 15px 15px 0px rgba(0,0,0,0.7);
+  
+  /* ADD THESE TWO LINES to ensure it never overflows small screens */
+  max-width: 95vw; 
+  max-height: 90vh;
 }
 
 .active { display: flex; z-index: 10; }
@@ -304,4 +308,135 @@ input[type=range]::-webkit-slider-thumb {
 
 #high-scores-list, #low-scores-list {
     margin-top: 10px;
+}
+/* Make the leaderboard lists slightly roomier for longer lists */
+#high-scores-list, #low-scores-list {
+    padding-right: 10px; /* Space for the scrollbar */
+}
+
+/* Optional: Retro 90s Scrollbar Styling (Chrome/Edge/Safari) */
+#high-scores-list::-webkit-scrollbar, 
+#low-scores-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+#high-scores-list::-webkit-scrollbar-track,
+#low-scores-list::-webkit-scrollbar-track {
+    background: #808080;
+    border: 2px inset #fff;
+}
+
+#high-scores-list::-webkit-scrollbar-thumb,
+#low-scores-list::-webkit-scrollbar-thumb {
+    background: var(--retro-gray);
+    border: 2px outset #fff;
+}
+
+
+
+
+/* Center the popup window */
+.window-popup {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 800px !important;
+  height: 500px !important;
+  z-index: 3000;
+}
+
+#proxemics-room {
+  flex: 2;
+  background: #000;
+  border: 4px inset var(--retro-border-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+#proxemics-map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#proxemics-legend {
+  flex: 1;
+  background: var(--retro-gray);
+  border: 2px inset white;
+  padding: 15px;
+  text-align: left;
+  font-family: sans-serif;
+  color: #000;
+}
+
+.key-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 14px; font-weight: bold; }
+
+/* Swatches for the key */
+.dot { width: 20px; height: 20px; border-radius: 50%; display: inline-block; border: 1px solid #000; }
+.dot.gold { background: gold; box-shadow: 0 0 5px gold; }
+.dot.gray { background: #808080; }
+.dot.dashed { border: 2px dashed #00ff00; background: rgba(0, 255, 0, 0.1); }
+
+/* Circle Entities */
+.circle-ent {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid white;
+}
+
+.npc-static { background: #808080; }
+.bennet-static { background: gold; box-shadow: 0 0 15px gold; }
+
+.player-slot {
+  background: rgba(0, 255, 0, 0.1);
+  border: 2px dashed #00ff00;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.player-slot:hover { background: rgba(0, 255, 0, 0.5); transform: translate(-50%, -50%) scale(1.1); }
+.player-slot {
+    cursor: pointer;
+    z-index: 10; /* Ensure slots are on top of gray NPCs */
+}
+
+/* Add a simple 'active' state for the click */
+.player-slot:active {
+    background: rgba(0, 255, 0, 0.8);
+    border-style: solid;
+}
+
+/* Style for the logo on the start screen */
+.main-logo {
+    max-width: 250px;   /* Adjust this number to make the logo bigger or smaller */
+    height: auto;       /* Keeps the proportions correct */
+    margin: 0 auto;     /* Centers it */
+    display: block;
+    image-rendering: pixelated; /* Optional: gives it a sharper, retro feel if it's a small image */
+}
+
+.main-logo {
+    max-width: 250px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    /* Optional: Retro 90s border effect */
+    border: 2px inset #808080; 
+    background: #fff; /* Good if the logo has a transparent background */
+    padding: 5px;
+}
+
+#secret-link-box a {
+    animation: blink-animation 1.5s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+    to { visibility: hidden; }
+}
+
+#secret-link-box a:hover {
+    color: #fff;
+    background: var(--isu-light);
 }

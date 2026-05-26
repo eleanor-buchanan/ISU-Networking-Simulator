@@ -5,6 +5,11 @@
   <meta charset="UTF-8">
   <title>ISU Networking Simulator</title>
   <link rel="stylesheet" href="style.css">
+
+  <meta property="og:title" content="ISU Networking Simulator">
+  <meta property="og:description" content="A high-stakes social simulator for students at the International Space University.">
+  <meta property="og:image" content="ISUlogo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
 </head>
 <body>
  <!-- Add this line here -->
@@ -14,20 +19,33 @@
   <body>
   <!-- 1. NEW: The Pre-Start Vibe Screen -->
   <div id="screen-pre-start" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: transparent;">
-      <button class="btn-90s" onclick="beginAdventure()" style="padding: 10px 20px; font-size: 14px;">networking is hard!!!!!!</button>
+      <button class="btn-90s" onclick="beginAdventure()" style="padding: 10px 20px; font-size: 14px;">networking is hard</button>
   </div>
   <div id="screen-start" class="window">
     <div class="title-bar"><span>Start Screen</span><span>[X]</span></div>
     <div class="content-area" style="text-align: center; justify-content: center;">
+      <!-- ADD THE ONCLICK TO THE IMAGE -->
+      <img src="ISUlogo.png" alt="ISU Logo" class="main-logo" id="secret-logo-trigger" onclick="handleLogoSecret()">
+
+      <!-- ADD THIS HIDDEN LINK BOX -->
+    <div id="secret-link-box" style="display: none; margin-top: 10px; padding: 10px; border: 2px outset var(--isu-light); background: #000;">
+    <p style="color: #fff; font-size: 14px; margin-bottom: 5px;">ooh you found a little secret!</p>
+    
+    <!-- This button opens the local file in a new tab -->
+    <button class="btn-90s" onclick="window.open('networkmap.png', '_blank')" style="color: #000000; width: 100%;">
+        > OPEN DIALOGUE MAP 
+    </button>
+      </div>
       <h1 style="font-size: 50px; margin-bottom:0;">ISU Networking Simulator</h1>
       <p style="font-size: 30px;"><em>Because We Could All Use The Practice</em></p>
       <p style="font-size: 20px;">a game by Ella Buchanan, ISU MSS'26</p>
-      <br>
-      <button class="btn-90s" onclick="showScreen('screen-outfit')" style="padding: 20px 40px;">[ Enter Simulation ]</button>
+      <br>      
+      <button class="btn-90s" onclick="showScreen('screen-outfit')" style="padding: 20px 40px;"> Enter Simulator </button>
        <div style="margin-top: 10px;">
         <button class="btn-90s" onclick="openSettings()" style="display: inline-block; padding: 5px 10px;">Settings</button>
         <button class="btn-90s" onclick="openCredits()" style="display: inline-block; padding: 5px 10px;">Credits</button>
         <button class="btn-90s" onclick="openLeaderboard()" style="display: inline-block; padding: 5px 10px;">Leaderboard</button>
+        <button class="btn-90s" onclick="triggerResult('EarlyExit')" style="display: inline-block; padding: 20px 40px; color: #000000;"> Exit Game </button>
       </div>
     </div>
 </div>
@@ -37,10 +55,10 @@
   <div class="content-area" style="justify-content: center; align-items: center; text-align: center;">
     <h3>Jazz Intensity</h3>
     <input type="range" id="volume-slider" min="0" max="100" value="15" oninput="changeVolume(this.value)" style="width: 300px; cursor: pointer;">
-    <p>Volume: <span id="vol-value">15</span>%</p>
+    <p>percentage of jazz desired: <span id="vol-value">15</span>%</p>
     <br>
     <button class="btn-90s" onclick="closeSettings()">THAT'S GOOD</button>
-    <button class="btn-90s" onclick="toggleHardMode()" style="background: #000; color: #ff0000; border-color: #ff0000;">HARD MODE</button>
+    <button id="btn-hard-mode" class="btn-90s" onclick="toggleHardMode()" style="background: #000; color: #ff0000; border-color: #ff0000;">HARD MODE</button>
   </div>
 </div>
   </div>
@@ -53,14 +71,14 @@
     <div style="background:#fff; color:#000; padding:20px; border:2px inset #808080; flex-grow:1; overflow-y:auto; font-size:18px;">
       <p><b>ISU Networking Simulator</b></p>
       <p>Design & Writing: Ella Buchanan</p>
-      <p>Technical/Writing Assistance: AI Assistant</p>
+      <p>Coding Assistance: Google AI Studio, Claude</p>
       <p>Music: "Space Jazz" (Kevin Macleod)</p>
-      <p>Special thanks to Professor Anwar Sounny-Slitine, for making us do a grueling 3-day AI workshop that was the genesis of this project. </p>
-      <p>Thanks also to Professor Jay Gaillard, who helped it win the class competiton, and convinced me to keep polishing it. </p>
-      <p>Thanks to the real Darius for letting me skip the hard step of breaking the ice and just directly dragging me into conversations he's already having with, like, CEOs and astronauts and scientists. He charms strangers with a freakish ease and does not need the training this simulator provides. 
-      <p>Finally, thanks to the MSS'26 cohort, for their endless love and support and jokes that make me laugh so hard I pee a little. I hope this game is a fraction of proof that I want to forever return the same to you all.</p>
+      <p>Special thanks to Professor Anwar Sounny-Slitine, for making us do a 3-day AI workshop that was the genesis of this project. </p>
+      <p>Thanks also to Professor Jay Gaillard, who convinced me to keep polishing it. </p>
+      <p>Thanks to the real Darius for letting his friends skip the small talk and just directly dragging us into conversations he's already having with, like, CEOs and astronauts and scientists. He charms strangers with a freakish ease and does not need the training this simulator provides. 
+      <p>Finally, thanks to the MSS'26 cohort, for their endless love and support and jokes that make me laugh so hard I pee a little. You're all the best, and I hope you all get every internship you ever ask for.</p>
       <hr>
-      <p style="font-size:14px;">Made while I was supposed to be studying for the Module 3 exams. Sorry, Dr. Wotring and Dr. Goldman....</p>
+      <p style="font-size:10px;">Made while I was supposed to be studying for the Module 3 exams. Sorry, Dr. Wotring and Dr. Goldman...</p>
     </div>
     <br>
     <button class="btn-90s" onclick="closeCredits()" style="align-self: center;">NO NEED TO GET SAPPY</button>
@@ -82,7 +100,6 @@
     <div class="content-area">
       <div class="status-panel">
         <div>SCORE: <span style="position: relative;"><span id="hall-score">0000</span></span></div>
-        <div>STABILITY: NOMINAL</div>
       </div>
       <p><b>PERSONNEL_LOCATED:</b></p>
       <div style="border: 3px inset #808080; background: #fff; flex-grow:1;">
@@ -101,7 +118,6 @@
     <div class="content-area">
       <div class="status-panel">
         <div>SCORE: <span style="position: relative;"><span id="darius-score">0000</span></span></div>
-        <div>STABILITY: NOMINAL</div>
       </div>
       <div id="log-darius" class="log-container"></div>
       <div class="choice-area" id="choices-darius"></div>
@@ -136,6 +152,30 @@
     </div>
   </div>
 
+  <!-- PROXEMICS MINIGAME WINDOW -->
+<div id="window-proxemics" class="window window-popup">
+  <div class="title-bar"><span>PROXEMICS ASSESSMENT</span></div>
+  <div class="content-area" style="display: flex; flex-direction: row; gap: 20px;">
+    
+    <!-- Left Side: The Map (Room) -->
+    <div id="proxemics-room">
+      <div id="proxemics-map-container"></div>
+    </div>
+
+    <!-- Right Side: The Key/Legend -->
+    <div id="proxemics-legend">
+      <h4 style="margin-top:0; color: var(--isu-blue);">KEY</h4>
+      <div class="key-item"><span class="dot gold"></span> Dr. Bennet</div>
+      <div class="key-item"><span class="dot gray"></span> Classmate </div>
+      <div class="key-item"><span class="dot dashed"></span> Possible Entry Point</div>
+      <hr>
+      <p id="proxemics-feedback" style="font-size: 14px; font-weight: bold;"></p>
+       <button id="proxemics-continue-btn" class="btn-90s" style="display:none; width: 100%; margin-top: 20px;" onclick="finishProxemics()"> LET ME KEEP YAPPING PLEASE </button>
+    </div>
+
+  </div>
+</div>
+
   <!-- LEADERBOARD WINDOW -->
   <div id="window-leaderboard" class="window">
     <div class="title-bar"><span>Best and Worst At Networking</span><span onclick="closeLeaderboard()" style="cursor:pointer">[X]</span></div>
@@ -151,9 +191,10 @@
         </div>
       </div>
       <br>
-      <button class="btn-90s" onclick="closeLeaderboard()" style="align-self: center;">OKAY</button>
+      <button class="btn-90s" onclick="closeLeaderboard()" style="align-self: center;">YEAH, YEAH</button>
     </div>
   </div>
+  <div id="hard-mode-overlay"></div>
 
   <script src="game.js"></script>
 </body>
