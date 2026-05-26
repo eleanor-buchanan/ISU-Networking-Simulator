@@ -83,14 +83,14 @@ const outfits = [
   { desc: "Pink pajama shorts that say JUICY on the butt, oversized vintage Garfield T-shirt, Uggs", pts: -30 },
   { desc: "Black leggings, crop-top hoodie, white sneakers", pts: 0 },
   { desc: "Floor-length red silk gown with slit, opera gloves, diamond necklace, metallic high heels", pts: 10 },
-  { desc: "High-waisted jeans, tucked white T-shirt, denim jacket, canvas sneakers.", pts: 20 },
+  { desc: "High-waisted jeans, tucked white T-shirt, denim jacket, canvas sneakers", pts: 20 },
   { desc: "Cream turtleneck sweater, plaid skirt, sheer tights, ankle boots", pts: 30 },
   { desc: "Jeans and t-shirt with a nice blazer on top", pts: 30 },
   { desc: "Satin dark green cocktail dress, silver earrings, matching clutch purse, strappy heels", pts: 40 },
-  { desc: "Inflatable dinosaur costume", pts: -50 },
-  { desc: "Blue plaid pajama pants, white undershirt, gray bathrobe, bare feet.", pts: -20 },
+  { desc: "Inflatable dinosaur costume", pts: -40 },
+  { desc: "Blue plaid pajama pants, white undershirt, gray bathrobe, bare feet", pts: -20 },
   { desc: "Lakers basketball uniform", pts: -20 },
-  { desc: "Nothing", pts: -50 },
+  { desc: "Nothing", pts: -60 },
 ];
 
 // Replace your old "Initialize Outfits" loop with this:
